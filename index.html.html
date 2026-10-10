@@ -1,0 +1,1018 @@
+<!DOCTYPE html>
+<html lang="en" class="h-full bg-slate-950 text-slate-100">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ultimate Guitar Scale Mastery & Learning Studio</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        gold: { 400: '#facc15', 500: '#eab308', 600: '#ca8a04' },
+                        emeraldAccent: '#10b981',
+                        cyanAccent: '#06b6d4',
+                        fretboardWood: '#1c1917',
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'system-ui', 'sans-serif'],
+                        mono: ['JetBrains Mono', 'Fira Code', 'monospace']
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        ::-webkit-scrollbar { height: 8px; width: 8px; }
+        ::-webkit-scrollbar-track { background: #090d16; }
+        ::-webkit-scrollbar-thumb { background: #1e293b; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #334155; }
+        
+        .fret-marker::after {
+            content: '';
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            background: rgba(255, 255, 255, 0.15);
+            border-radius: 50%;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            pointer-events: none;
+        }
+        .double-fret-marker::before, .double-fret-marker::after {
+            content: '';
+            position: absolute;
+            width: 8px;
+            height: 8px;
+            background: rgba(255, 255, 255, 0.15);
+            border-radius: 50%;
+            left: 50%;
+            transform: translateX(-50%);
+            pointer-events: none;
+        }
+        .double-fret-marker::before { top: 22%; }
+        .double-fret-marker::after { bottom: 22%; }
+        .slide-rule-track {
+            background: linear-gradient(180deg, #0f172a 0%, #020617 100%);
+            box-shadow: inset 0 2px 10px rgba(0,0,0,0.8);
+        }
+    </style>
+</head>
+<body class="h-full flex flex-col font-sans bg-slate-950 text-slate-100 antialiased selection:bg-cyan-500 selection:text-slate-950">
+
+    <header class="bg-slate-900 border-b border-slate-800 px-4 py-3 sticky top-0 z-50 flex flex-wrap justify-between items-center shadow-lg">
+        <div class="flex items-center space-x-3">
+            <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-cyan-500 to-emerald-400 flex items-center justify-center text-slate-950 font-black text-xl shadow-lg shadow-cyan-500/20">
+                <i class="fa-solid fa-guitar"></i>
+            </div>
+            <div>
+                <h1 class="text-base sm:text-lg font-bold tracking-tight text-white flex items-center gap-2">
+                    SCALE MASTERY STUDIO <span class="text-xs px-2 py-0.5 rounded-full bg-cyan-500/10 text-cyan-400 border border-cyan-500/30">ALL-IN-ONE</span>
+                </h1>
+                <p class="text-xs text-slate-400">Interactive Slide Rule, 24-Fret Studio, Drone Player & Quiz Trainer</p>
+            </div>
+        </div>
+
+        <nav class="flex space-x-1 bg-slate-950 p-1 rounded-xl border border-slate-800/80 my-2 sm:my-0 overflow-x-auto max-w-full">
+            <button id="tab-explorer-btn" onclick="switchTab('explorer')" class="tab-btn px-3 py-1.5 rounded-lg text-xs font-semibold flex items-center gap-1.5 transition-all bg-cyan-500 text-slate-950 shadow-md whitespace-nowrap">
+                <i class="fa-solid fa-ruler-horizontal"></i> Slide Rule & Explorer
+            </button>
+            <button id="tab-fretboard-btn" onclick="switchTab('fretboard')" class="tab-btn px-3 py-1.5 rounded-lg text-xs font-semibold text-slate-400 hover:text-white flex items-center gap-1.5 transition-all whitespace-nowrap">
+                <i class="fa-solid fa-sliders"></i> 24-Fret & CAGED
+            </button>
+            <button id="tab-audio-btn" onclick="switchTab('audio')" class="tab-btn px-3 py-1.5 rounded-lg text-xs font-semibold text-slate-400 hover:text-white flex items-center gap-1.5 transition-all whitespace-nowrap">
+                <i class="fa-solid fa-headphones"></i> Audio & Drone
+            </button>
+            <button id="tab-trainer-btn" onclick="switchTab('trainer')" class="tab-btn px-3 py-1.5 rounded-lg text-xs font-semibold text-slate-400 hover:text-white flex items-center gap-1.5 transition-all whitespace-nowrap">
+                <i class="fa-solid fa-graduation-cap"></i> Trainer & Checklist
+            </button>
+        </nav>
+
+        <div class="flex items-center space-x-3">
+            <div class="hidden md:flex items-center bg-slate-950 px-2.5 py-1 rounded-lg border border-slate-800 text-xs gap-2">
+                <i class="fa-solid fa-volume-high text-cyan-400"></i>
+                <input id="master-volume" type="range" min="0" max="1" step="0.05" value="0.7" class="w-16 h-1.5 bg-slate-800 rounded-lg appearance-none cursor-pointer accent-cyan-400">
+            </div>
+            <button id="audio-enable-btn" onclick="enableAudio()" class="px-3 py-1.5 rounded-lg bg-amber-500/20 text-amber-400 border border-amber-500/30 hover:bg-amber-500/30 text-xs font-medium transition-all flex items-center gap-1.5">
+                <i class="fa-solid fa-bolt"></i> Enable Audio
+            </button>
+        </div>
+    </header>
+
+    <main class="flex-1 overflow-y-auto p-4 md:p-6 space-y-6 max-w-7xl mx-auto w-full">
+        
+        <div class="bg-slate-900 border border-slate-800 rounded-2xl p-4 shadow-xl space-y-4">
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-4 items-center">
+                
+                <!-- Root Note & Accidental Toggle -->
+                <div class="lg:col-span-5 space-y-2">
+                    <div class="flex justify-between items-center">
+                        <label class="text-xs font-bold uppercase tracking-wider text-slate-400">Root Key</label>
+                        <div class="flex items-center gap-1 bg-slate-950 px-2 py-0.5 rounded-lg border border-slate-800 text-xs">
+                            <span class="text-slate-400 text-[10px] font-bold">Accidental:</span>
+                            <button id="accidental-sharp" onclick="setAccidental(false)" class="px-1.5 py-0.5 rounded bg-cyan-500 text-slate-950 font-bold">♯</button>
+                            <button id="accidental-flat" onclick="setAccidental(true)" class="px-1.5 py-0.5 rounded text-slate-400 hover:text-white">♭</button>
+                        </div>
+                    </div>
+                    <div id="root-notes-container" class="grid grid-cols-6 sm:grid-cols-12 gap-1 bg-slate-950 p-1.5 rounded-xl border border-slate-800">
+                        <!-- Root buttons injected dynamically -->
+                    </div>
+                </div>
+
+                <!-- Scale & Mode Selector -->
+                <div class="lg:col-span-4 space-y-2">
+                    <label class="text-xs font-bold uppercase tracking-wider text-slate-400">Scale / Mode Library</label>
+                    <select id="scale-select" onchange="changeScale(this.value)" class="w-full bg-slate-950 border border-slate-800 text-white rounded-xl px-3 py-2.5 text-sm font-medium focus:ring-2 focus:ring-cyan-500 focus:outline-none transition-all">
+                        <!-- Categorized scale options injected dynamically -->
+                    </select>
+                </div>
+
+                <!-- Quick Action Buttons -->
+                <div class="lg:col-span-3 flex flex-col sm:flex-row gap-2 justify-end items-end h-full pt-2 lg:pt-0">
+                    <button onclick="playScaleAudio()" class="w-full px-4 py-2.5 bg-gradient-to-r from-cyan-500 to-emerald-500 text-slate-950 font-bold rounded-xl text-xs flex items-center justify-center gap-2 hover:opacity-95 shadow-lg shadow-cyan-500/20 transition-all">
+                        <i class="fa-solid fa-play"></i> Play Scale Audio
+                    </button>
+                    <button onclick="toggleDroneNote()" id="quick-drone-btn" class="w-full px-4 py-2.5 bg-slate-950 hover:bg-slate-800 border border-slate-700 text-cyan-400 font-bold rounded-xl text-xs flex items-center justify-center gap-2 transition-all">
+                        <i class="fa-solid fa-wave-square"></i> Drone: OFF
+                    </button>
+                </div>
+
+            </div>
+        </div>
+
+        <div id="tab-explorer" class="tab-content space-y-6">
+            
+            <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5 shadow-xl space-y-4">
+                <div class="flex justify-between items-center flex-wrap gap-2">
+                    <div>
+                        <h2 class="text-sm font-bold tracking-wide text-white uppercase flex items-center gap-2">
+                            <i class="fa-solid fa-ruler-horizontal text-cyan-400"></i> Interactive Chromatic Slide Rule
+                        </h2>
+                        <p class="text-xs text-slate-400">Visual mapping of scale intervals, steps, and chromatic pitch standard</p>
+                    </div>
+                    <div id="scale-formula-badge" class="px-3 py-1 bg-cyan-950 border border-cyan-800 text-cyan-300 rounded-full text-xs font-mono font-semibold">
+                        Formula: W-W-H-W-W-W-H
+                    </div>
+                </div>
+
+                <div class="slide-rule-track border border-slate-800 rounded-xl p-3 overflow-x-auto">
+                    <div class="min-w-[800px] space-y-2">
+                        <div id="slide-rule-degrees" class="grid grid-cols-12 gap-1 text-center font-mono text-xs font-bold"></div>
+                        <div id="slide-rule-notes" class="grid grid-cols-12 gap-1 text-center font-mono text-sm font-black py-1"></div>
+                        <div id="slide-rule-intervals" class="grid grid-cols-12 gap-1 text-center text-[10px] text-slate-400 font-mono"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Diatonic Harmony & Nashville Number System Matrix -->
+            <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5 shadow-xl space-y-4">
+                <div class="flex justify-between items-center flex-wrap gap-2">
+                    <div>
+                        <h2 class="text-sm font-bold tracking-wide text-white uppercase flex items-center gap-2">
+                            <i class="fa-solid fa-cubes text-emerald-400"></i> Diatonic Harmony & Nashville System
+                        </h2>
+                        <p class="text-xs text-slate-400">Harmonic chord family derived from current scale/mode</p>
+                    </div>
+                    <div class="flex gap-2">
+                        <button onclick="setChordHarmonyType('triads')" id="btn-triads" class="px-3 py-1 rounded-lg text-xs font-bold bg-emerald-500 text-slate-950 shadow-md">Triads</button>
+                        <button onclick="setChordHarmonyType('sevenths')" id="btn-sevenths" class="px-3 py-1 rounded-lg text-xs font-bold bg-slate-800 text-slate-400 hover:text-white">7th Chords</button>
+                    </div>
+                </div>
+
+                <div id="diatonic-harmony-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-7 gap-3">
+                    <!-- Cards injected dynamically -->
+                </div>
+            </div>
+
+        </div>
+
+        <div id="tab-fretboard" class="tab-content hidden space-y-6">
+            
+            <div class="bg-slate-900 border border-slate-800 rounded-2xl p-4 shadow-xl space-y-4">
+                <div class="flex flex-wrap justify-between items-center gap-4">
+                    
+                    <!-- Tuning Selector -->
+                    <div class="flex items-center gap-2">
+                        <span class="text-xs font-bold uppercase text-slate-400">Tuning:</span>
+                        <select id="tuning-select" onchange="changeTuning(this.value)" class="bg-slate-950 border border-slate-800 text-slate-200 text-xs rounded-lg px-2.5 py-1.5 font-medium focus:ring-1 focus:ring-cyan-500 focus:outline-none">
+                            <option value="standard">Standard (E A D G B E)</option>
+                            <option value="dropD">Drop D (D A D G B E)</option>
+                            <option value="dadgad">DADGAD (D A D G A D)</option>
+                            <option value="halfStepDown">Half-Step Down (Eb Ab Db Gb Bb Eb)</option>
+                            <option value="openG">Open G (D G D G B D)</option>
+                            <option value="openD">Open D (D A D F# A D)</option>
+                        </select>
+                    </div>
+
+                    <!-- Display Mode Toggle -->
+                    <div class="flex items-center gap-1 bg-slate-950 p-1 rounded-xl border border-slate-800 text-xs">
+                        <span class="text-slate-400 px-2 font-bold uppercase text-[10px]">Display:</span>
+                        <button id="disp-notes-btn" onclick="setFretboardDisplay('notes')" class="px-2.5 py-1 rounded-lg font-bold bg-cyan-500 text-slate-950 transition-all">Notes</button>
+                        <button id="disp-degrees-btn" onclick="setFretboardDisplay('degrees')" class="px-2.5 py-1 rounded-lg text-slate-400 font-medium hover:text-white transition-all">Degrees</button>
+                        <button id="disp-intervals-btn" onclick="setFretboardDisplay('intervals')" class="px-2.5 py-1 rounded-lg text-slate-400 font-medium hover:text-white transition-all">Intervals</button>
+                        <button id="disp-octaves-btn" onclick="setFretboardDisplay('octaves')" class="px-2.5 py-1 rounded-lg text-slate-400 font-medium hover:text-white transition-all">Octaves</button>
+                    </div>
+
+                    <!-- CAGED / 3NPS Position Overlays -->
+                    <div class="flex items-center gap-2">
+                        <div class="flex items-center gap-1 bg-slate-950 p-1 rounded-xl border border-slate-800 text-xs">
+                            <span class="text-slate-400 px-2 font-bold uppercase text-[10px]">CAGED / Box:</span>
+                            <button onclick="setBoxOverlay('ALL')" id="box-all-btn" class="px-2 py-0.5 rounded text-xs font-bold bg-cyan-500 text-slate-950">All</button>
+                            <button onclick="setBoxOverlay('CAGED-C')" class="box-btn px-2 py-0.5 rounded text-xs font-mono font-bold text-slate-400 hover:text-white">C</button>
+                            <button onclick="setBoxOverlay('CAGED-A')" class="box-btn px-2 py-0.5 rounded text-xs font-mono font-bold text-slate-400 hover:text-white">A</button>
+                            <button onclick="setBoxOverlay('CAGED-G')" class="box-btn px-2 py-0.5 rounded text-xs font-mono font-bold text-slate-400 hover:text-white">G</button>
+                            <button onclick="setBoxOverlay('CAGED-E')" class="box-btn px-2 py-0.5 rounded text-xs font-mono font-bold text-slate-400 hover:text-white">E</button>
+                            <button onclick="setBoxOverlay('CAGED-D')" class="box-btn px-2 py-0.5 rounded text-xs font-mono font-bold text-slate-400 hover:text-white">D</button>
+                        </div>
+                    </div>
+
+                </div>
+
+                <!-- 24-Fret Fretboard Neck Rendering Container -->
+                <div class="relative bg-fretboardWood rounded-xl p-4 border-2 border-slate-800 shadow-2xl overflow-x-auto">
+                    <div class="min-w-[1250px]">
+                        <div id="fret-number-header" class="flex pl-12 mb-2 text-center text-xs font-mono font-bold text-slate-400"></div>
+                        <div id="fretboard-grid" class="space-y-2"></div>
+                    </div>
+                </div>
+
+                <div class="flex flex-wrap items-center justify-between gap-4 pt-2 text-xs text-slate-400 border-t border-slate-800/60">
+                    <div class="flex items-center gap-4">
+                        <span class="flex items-center gap-1.5"><span class="w-3 h-3 rounded-full bg-amber-400 inline-block shadow shadow-amber-400/50"></span> Root Note</span>
+                        <span class="flex items-center gap-1.5"><span class="w-3 h-3 rounded-full bg-cyan-500 inline-block shadow shadow-cyan-500/50"></span> Scale Tone</span>
+                        <span class="flex items-center gap-1.5"><span class="w-3 h-3 rounded-full bg-slate-800 border border-slate-700 inline-block"></span> Non-Scale Pitch</span>
+                    </div>
+                    <div><span class="text-slate-500"><i class="fa-solid fa-circle-info"></i> Click any fret note to hear synthesized audio output.</span></div>
+                </div>
+            </div>
+
+        </div>
+
+        <div id="tab-audio" class="tab-content hidden space-y-6">
+            
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                
+                <!-- Drone Note Player Card -->
+                <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5 shadow-xl space-y-4">
+                    <h2 class="text-sm font-bold tracking-wide text-white uppercase flex items-center gap-2">
+                        <i class="fa-solid fa-wave-square text-cyan-400"></i> Modal Improvisation Drone Player
+                    </h2>
+                    <p class="text-xs text-slate-400">Play a continuous looping drone note of the root key in the background to practice modal solos and ear training.</p>
+                    
+                    <div class="bg-slate-950 border border-slate-800 rounded-xl p-6 space-y-4 text-center">
+                        <div class="text-2xl font-black font-mono text-cyan-400" id="drone-status-label">Drone Stopped</div>
+                        <div class="flex justify-center gap-3">
+                            <button onclick="toggleDroneNote()" id="drone-big-btn" class="px-6 py-3 bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-bold rounded-xl text-sm shadow-lg shadow-cyan-500/20 transition-all flex items-center gap-2">
+                                <i class="fa-solid fa-play" id="drone-icon"></i> <span id="drone-btn-text">Start Drone</span>
+                            </button>
+                        </div>
+                        <div class="grid grid-cols-2 gap-4 pt-2">
+                            <div>
+                                <label class="text-[10px] uppercase font-bold text-slate-400 block mb-1">Drone Octave</label>
+                                <select id="drone-octave" class="w-full bg-slate-900 border border-slate-800 text-xs rounded-lg p-2 text-white">
+                                    <option value="2">Octave 2 (Low Bass)</option>
+                                    <option value="3" selected>Octave 3 (Standard)</option>
+                                    <option value="4">Octave 4 (High)</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="text-[10px] uppercase font-bold text-slate-400 block mb-1">Waveform Timbre</label>
+                                <select id="drone-waveform" class="w-full bg-slate-900 border border-slate-800 text-xs rounded-lg p-2 text-white">
+                                    <option value="sine">Warm Sine</option>
+                                    <option value="triangle" selected>Mellow Triangle</option>
+                                    <option value="sawtooth">Rich Sawtooth</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Metronome & Speed Trainer -->
+                <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5 shadow-xl space-y-4">
+                    <h2 class="text-sm font-bold tracking-wide text-white uppercase flex items-center gap-2">
+                        <i class="fa-solid fa-stopwatch text-emerald-400"></i> Metronome & Speed Trainer
+                    </h2>
+                    <p class="text-xs text-slate-400">Practice scale runs with strict timing, adjustable BPM, and tap tempo.</p>
+
+                    <div class="bg-slate-950 border border-slate-800 rounded-2xl p-6 space-y-5">
+                        <div class="flex justify-between items-center">
+                            <div>
+                                <span class="text-xs text-slate-400 uppercase font-bold">Tempo Speed</span>
+                                <div class="text-3xl font-black text-emerald-400 font-mono"><span id="bpm-display">120</span> <span class="text-xs font-normal text-slate-500">BPM</span></div>
+                            </div>
+                            <div class="flex gap-2">
+                                <button onclick="tapTempo()" class="px-3 py-2 bg-slate-900 hover:bg-slate-800 text-xs font-bold rounded-xl border border-slate-700 text-slate-300">Tap Tempo</button>
+                                <button id="metronome-toggle-btn" onclick="toggleMetronome()" class="w-12 h-12 rounded-full bg-emerald-500 hover:bg-emerald-400 text-slate-950 flex items-center justify-center font-black text-lg shadow-lg shadow-emerald-500/20 transition-all">
+                                    <i class="fa-solid fa-play" id="metro-icon"></i>
+                                </button>
+                            </div>
+                        </div>
+
+                        <input id="bpm-slider" type="range" min="40" max="240" value="120" oninput="updateBPM(this.value)" class="w-full h-2 bg-slate-800 rounded-lg appearance-none cursor-pointer accent-emerald-400">
+
+                        <div class="flex justify-center gap-3 pt-2">
+                            <div id="metro-beat-1" class="w-4 h-4 rounded-full bg-slate-800 transition-all"></div>
+                            <div id="metro-beat-2" class="w-4 h-4 rounded-full bg-slate-800 transition-all"></div>
+                            <div id="metro-beat-3" class="w-4 h-4 rounded-full bg-slate-800 transition-all"></div>
+                            <div id="metro-beat-4" class="w-4 h-4 rounded-full bg-slate-800 transition-all"></div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+
+        <div id="tab-trainer" class="tab-content hidden space-y-6">
+            
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                
+                <!-- Fretboard Note / Degree Quiz Card -->
+                <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5 shadow-xl space-y-4">
+                    <div class="flex justify-between items-center">
+                        <h2 class="text-sm font-bold tracking-wide text-white uppercase flex items-center gap-2">
+                            <i class="fa-solid fa-bullseye text-amber-400"></i> Fretboard Mastery Flashcards
+                        </h2>
+                        <span id="quiz-score" class="text-xs font-mono font-bold bg-slate-950 px-3 py-1 rounded-full border border-slate-800 text-amber-400">
+                            Score: 0 / 0 • Streak: 0
+                        </span>
+                    </div>
+
+                    <div id="quiz-display" class="bg-slate-950 border border-slate-800 rounded-xl p-6 text-center space-y-4">
+                        <p class="text-xs text-slate-400 uppercase font-semibold">Identify the note or degree at this fret position:</p>
+                        <div id="quiz-prompt" class="text-3xl font-black text-cyan-400 font-mono tracking-wider">
+                            String 1 • Fret 5
+                        </div>
+                        <div id="quiz-options" class="grid grid-cols-4 gap-2 pt-2">
+                            <!-- Options injected -->
+                        </div>
+                        <div id="quiz-feedback" class="h-6 text-xs font-bold text-center"></div>
+                    </div>
+
+                    <div class="flex justify-between items-center pt-2">
+                        <button onclick="startNewQuizRound()" class="px-4 py-2 bg-slate-800 hover:bg-slate-700 text-white font-semibold text-xs rounded-xl border border-slate-700 transition-all flex items-center gap-2">
+                            <i class="fa-solid fa-rotate-right"></i> Next Question
+                        </button>
+                        <button onclick="resetQuizScore()" class="text-xs text-slate-500 hover:text-slate-300">Reset Stats</button>
+                    </div>
+                </div>
+
+                <!-- Step-by-Step Mastery Checklist -->
+                <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5 shadow-xl space-y-4">
+                    <h2 class="text-sm font-bold tracking-wide text-white uppercase flex items-center gap-2">
+                        <i class="fa-solid fa-list-check text-cyan-400"></i> Scale Practice & Mastery Checklist
+                    </h2>
+                    <p class="text-xs text-slate-400">Follow this proven 4-step workflow to master any scale across the entire fretboard.</p>
+
+                    <div class="space-y-2.5 text-xs">
+                        <label class="flex items-start gap-3 p-3 bg-slate-950 rounded-xl border border-slate-800/80 cursor-pointer hover:border-slate-700 transition-all">
+                            <input type="checkbox" class="mt-0.5 w-4 h-4 rounded bg-slate-900 border-slate-700 text-cyan-500 focus:ring-cyan-500">
+                            <div><strong class="text-white block">Step 1: Root Position Memorization</strong>Locate all root notes on the E and A strings for your chosen key without hesitation.</div>
+                        </label>
+                        <label class="flex items-start gap-3 p-3 bg-slate-950 rounded-xl border border-slate-800/80 cursor-pointer hover:border-slate-700 transition-all">
+                            <input type="checkbox" class="mt-0.5 w-4 h-4 rounded bg-slate-900 border-slate-700 text-cyan-500 focus:ring-cyan-500">
+                            <div><strong class="text-white block">Step 2: Single Position Box Mastery</strong>Isolate Box 1 (or CAGED position) and play ascending and descending at 80 BPM cleanly.</div>
+                        </label>
+                        <label class="flex items-start gap-3 p-3 bg-slate-950 rounded-xl border border-slate-800/80 cursor-pointer hover:border-slate-700 transition-all">
+                            <input type="checkbox" class="mt-0.5 w-4 h-4 rounded bg-slate-900 border-slate-700 text-cyan-500 focus:ring-cyan-500">
+                            <div><strong class="text-white block">Step 3: Interval & Triad Harmonization</strong>Examine the Diatonic Harmony table and spell out the 1-3-5 triads for each degree.</div>
+                        </label>
+                        <label class="flex items-start gap-3 p-3 bg-slate-950 rounded-xl border border-slate-800/80 cursor-pointer hover:border-slate-700 transition-all">
+                            <input type="checkbox" class="mt-0.5 w-4 h-4 rounded bg-slate-900 border-slate-700 text-cyan-500 focus:ring-cyan-500">
+                            <div><strong class="text-white block">Step 4: Drone Improvisation & Speed Run</strong>Turn on the Drone Player in Tab 3 and improvise melodies for 3 uninterrupted minutes.</div>
+                        </label>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+
+    </main>
+
+    <script>
+        const SHARP_NOTES = ["C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B"];
+        const FLAT_NOTES  = ["C", "Db", "D", "Eb", "E", "F", "Gb", "G", "Ab", "A", "Bb", "B"];
+        
+        // Map any note to standard 0-11 index
+        const NOTE_MAP = {
+            "C":0, "B#":0,
+            "C#":1, "Db":1,
+            "D":2,
+            "D#":3, "Eb":3,
+            "E":4, "Fb":4,
+            "F":5, "E#":5,
+            "F#":6, "Gb":6,
+            "G":7,
+            "G#":8, "Ab":8,
+            "A":9,
+            "A#":10, "Bb":10,
+            "B":11, "Cb":11
+        };
+
+        const SCALES = {
+            // Diatonic Modes
+            "major": { category: "Diatonic Modes", name: "Major (Ionian)", intervals: [0,2,4,5,7,9,11], formula: "W-W-H-W-W-W-H", triads: ["Maj","min","min","Maj","Maj","min","dim"], sevenths: ["Maj7","m7","m7","Maj7","7","m7","m7b5"] },
+            "dorian": { category: "Diatonic Modes", name: "Dorian Mode", intervals: [0,2,3,5,7,9,10], formula: "W-H-W-W-W-H-W", triads: ["min","min","Maj","Maj","min","dim","Maj"], sevenths: ["m7","m7","Maj7","7","m7","m7b5","Maj7"] },
+            "phrygian": { category: "Diatonic Modes", name: "Phrygian Mode", intervals: [0,1,3,5,7,8,10], formula: "H-W-W-W-H-W-W", triads: ["min","Maj","Maj","min","dim","Maj","min"], sevenths: ["m7","Maj7","7","m7","m7b5","Maj7","m7"] },
+            "lydian": { category: "Diatonic Modes", name: "Lydian Mode", intervals: [0,2,4,6,7,9,11], formula: "W-W-W-H-W-W-H", triads: ["Maj","Maj","min","dim","Maj","min","min"], sevenths: ["Maj7","7","m7","m7b5","Maj7","m7","m7"] },
+            "mixolydian": { category: "Diatonic Modes", name: "Mixolydian Mode", intervals: [0,2,4,5,7,9,10], formula: "W-W-H-W-W-H-W", triads: ["Maj","min","dim","Maj","min","min","Maj"], sevenths: ["7","m7","m7b5","Maj7","m7","m7","Maj7"] },
+            "minor": { category: "Diatonic Modes", name: "Natural Minor (Aeolian)", intervals: [0,2,3,5,7,8,10], formula: "W-H-W-W-H-W-W", triads: ["min","dim","Maj","min","min","Maj","Maj"], sevenths: ["m7","m7b5","Maj7","m7","m7","Maj7","7"] },
+            "locrian": { category: "Diatonic Modes", name: "Locrian Mode", intervals: [0,1,3,5,6,8,10], formula: "H-W-W-H-W-W-W", triads: ["dim","Maj","min","min","Maj","Maj","min"], sevenths: ["m7b5","Maj7","m7","m7","Maj7","7","m7"] },
+
+            // Pentatonic & Blues
+            "pentatonicMajor": { category: "Pentatonic & Blues", name: "Pentatonic Major", intervals: [0,2,4,7,9], formula: "W-W-1.5W-W-1.5W", triads: [], sevenths: [] },
+            "pentatonicMinor": { category: "Pentatonic & Blues", name: "Pentatonic Minor", intervals: [0,3,5,7,10], formula: "1.5W-W-W-1.5W-W", triads: [], sevenths: [] },
+            "blues": { category: "Pentatonic & Blues", name: "Blues Scale", intervals: [0,3,5,6,7,10], formula: "1.5W-W-H-H-1.5W-W", triads: [], sevenths: [] },
+
+            // Minor Variations & Exotic
+            "harmonicMinor": { category: "Advanced & Exotic", name: "Harmonic Minor", intervals: [0,2,3,5,7,8,11], formula: "W-H-W-W-H-1.5W-H", triads: ["min","dim","aug","min","Maj","Maj","dim"], sevenths: ["mMaj7","m7b5","Maj7#5","m7","7","Maj7","dim7"] },
+            "melodicMinor": { category: "Advanced & Exotic", name: "Melodic Minor (Jazz)", intervals: [0,2,3,5,7,9,11], formula: "W-H-W-W-W-W-H", triads: ["min","min","aug","Maj","Maj","dim","dim"], sevenths: ["mMaj7","m7","Maj7#5","7","7","m7b5","m7b5"] },
+            "wholeTone": { category: "Advanced & Exotic", name: "Whole Tone Scale", intervals: [0,2,4,6,8,10], formula: "W-W-W-W-W-W", triads: [], sevenths: [] },
+            "diminished": { category: "Advanced & Exotic", name: "Diminished (Half-Whole)", intervals: [0,1,3,4,6,7,9,10], formula: "H-W-H-W-H-W-H-W", triads: [], sevenths: [] },
+            "hungarianMinor": { category: "Advanced & Exotic", name: "Hungarian Minor", intervals: [0,2,3,6,7,8,11], formula: "W-H-1.5W-H-H-1.5W-H", triads: [], sevenths: [] }
+        };
+
+        const TUNINGS = {
+            "standard": [4, 11, 7, 2, 9, 4],     // E4, B3, G3, D3, A2, E2
+            "dropD": [4, 11, 7, 2, 9, 2],        // E4, B3, G3, D3, A2, D2
+            "dadgad": [2, 9, 7, 2, 9, 2],       // D4, A3, G3, D3, A2, D2
+            "halfStepDown": [3, 10, 6, 1, 8, 3], // Eb4, Bb3, Gb3, Db3, Ab2, Eb2
+            "openG": [2, 11, 7, 2, 7, 2],       // D4, B3, G3, D3, G2, D2
+            "openD": [2, 9, 6, 2, 9, 2]         // D4, A3, F#3, D3, A2, D2
+        };
+
+        const INTERVAL_NAMES = {0: "R", 1: "b2", 2: "2", 3: "b3", 4: "3", 5: "4", 6: "b5/#4", 7: "5", 8: "b6", 9: "6", 10: "b7", 11: "7"};
+
+        let state = {
+            rootIdx: 0, // C
+            useFlats: false,
+            scaleKey: "major",
+            tuningKey: "standard",
+            displayMode: "notes", // notes | degrees | intervals | octaves
+            boxOverlay: "ALL", // ALL | CAGED-C | CAGED-A | CAGED-G | CAGED-E | CAGED-D
+            chordHarmonyType: "triads", // triads | sevenths
+            selectedHarmonyIdx: 0,
+            droneActive: false,
+            droneOctave: 3,
+            droneWaveform: "triangle",
+            bpm: 120,
+            metronomeRunning: false,
+            metronomeTimer: null,
+            metroBeat: 0,
+            quiz: { string: 0, fret: 0, scoreCorrect: 0, scoreTotal: 0, streak: 0 },
+            activeTab: "explorer"
+        };
+
+        let audioCtx = null;
+        let masterGain = null;
+        let droneOsc = null;
+        let droneGain = null;
+        let tapTimes = [];
+
+        window.addEventListener('DOMContentLoaded', () => {
+            initRootNotesSelector();
+            initScaleSelector();
+            renderAll();
+            startNewQuizRound();
+        });
+
+        function switchTab(tabId) {
+            state.activeTab = tabId;
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
+            document.getElementById(`tab-${tabId}`).classList.remove('hidden');
+
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.classList.remove('bg-cyan-500', 'text-slate-950', 'shadow-md');
+                btn.classList.add('text-slate-400');
+            });
+            const activeBtn = document.getElementById(`tab-${tabId}-btn`);
+            activeBtn.classList.remove('text-slate-400');
+            activeBtn.classList.add('bg-cyan-500', 'text-slate-950', 'shadow-md');
+        }
+
+        function setAccidental(useFlats) {
+            state.useFlats = useFlats;
+            document.getElementById('accidental-sharp').className = useFlats ? 'px-1.5 py-0.5 rounded text-slate-400 hover:text-white' : 'px-1.5 py-0.5 rounded bg-cyan-500 text-slate-950 font-bold';
+            document.getElementById('accidental-flat').className  = useFlats ? 'px-1.5 py-0.5 rounded bg-cyan-500 text-slate-950 font-bold' : 'px-1.5 py-0.5 rounded text-slate-400 hover:text-white';
+            initRootNotesSelector();
+            renderAll();
+        }
+
+        function initRootNotesSelector() {
+            const container = document.getElementById('root-notes-container');
+            container.innerHTML = '';
+            const noteArray = state.useFlats ? FLAT_NOTES : SHARP_NOTES;
+            
+            noteArray.forEach((note, idx) => {
+                const btn = document.createElement('button');
+                btn.textContent = note;
+                btn.onclick = () => { state.rootIdx = idx; initRootNotesSelector(); renderAll(); if(state.droneActive) restartDrone(); };
+                btn.className = `py-1.5 rounded-lg font-mono text-xs font-bold transition-all ${
+                    idx === state.rootIdx 
+                    ? 'bg-amber-400 text-slate-950 shadow-md shadow-amber-400/30' 
+                    : 'bg-slate-900 text-slate-300 hover:bg-slate-800'
+                }`;
+                container.appendChild(btn);
+            });
+        }
+
+        function initScaleSelector() {
+            const select = document.getElementById('scale-select');
+            select.innerHTML = '';
+            
+            const categories = {};
+            Object.keys(SCALES).forEach(key => {
+                const cat = SCALES[key].category;
+                if (!categories[cat]) categories[cat] = [];
+                categories[cat].push({ key, name: SCALES[key].name });
+            });
+
+            Object.keys(categories).forEach(catName => {
+                const optgroup = document.createElement('optgroup');
+                optgroup.label = catName;
+                categories[catName].forEach(item => {
+                    const opt = document.createElement('option');
+                    opt.value = item.key;
+                    opt.textContent = item.name;
+                    optgroup.appendChild(opt);
+                });
+                select.appendChild(optgroup);
+            });
+        }
+
+        function changeScale(scaleKey) {
+            state.scaleKey = scaleKey;
+            renderAll();
+        }
+
+        function changeTuning(tuningKey) {
+            state.tuningKey = tuningKey;
+            renderFretboard();
+        }
+
+        function setFretboardDisplay(mode) {
+            state.displayMode = mode;
+            ['notes','degrees','intervals','octaves'].forEach(m => {
+                const btn = document.getElementById(`disp-${m}-btn`);
+                btn.className = m === mode ? 'px-2.5 py-1 rounded-lg font-bold bg-cyan-500 text-slate-950 transition-all' : 'px-2.5 py-1 rounded-lg text-slate-400 font-medium hover:text-white transition-all';
+            });
+            renderFretboard();
+        }
+
+        function setBoxOverlay(box) {
+            state.boxOverlay = box;
+            document.getElementById('box-all-btn').className = box === 'ALL' ? 'px-2 py-0.5 rounded text-xs font-bold bg-cyan-500 text-slate-950' : 'px-2 py-0.5 rounded text-xs font-mono font-bold text-slate-400 hover:text-white';
+            document.querySelectorAll('.box-btn').forEach(btn => {
+                if (btn.textContent === box.replace('CAGED-','')) {
+                    btn.className = 'box-btn px-2 py-0.5 rounded text-xs font-mono font-bold bg-cyan-500 text-slate-950';
+                } else {
+                    btn.className = 'box-btn px-2 py-0.5 rounded text-xs font-mono font-bold text-slate-400 hover:text-white';
+                }
+            });
+            renderFretboard();
+        }
+
+        function setChordHarmonyType(type) {
+            state.chordHarmonyType = type;
+            document.getElementById('btn-triads').className = type === 'triads' ? 'px-3 py-1 rounded-lg text-xs font-bold bg-emerald-500 text-slate-950 shadow-md' : 'px-3 py-1 rounded-lg text-xs font-bold bg-slate-800 text-slate-400 hover:text-white';
+            document.getElementById('btn-sevenths').className = type === 'sevenths' ? 'px-3 py-1 rounded-lg text-xs font-bold bg-emerald-500 text-slate-950 shadow-md' : 'px-3 py-1 rounded-lg text-xs font-bold bg-slate-800 text-slate-400 hover:text-white';
+            renderDiatonicHarmony();
+        }
+
+        function renderAll() {
+            renderSlideRule();
+            renderDiatonicHarmony();
+            renderFretboard();
+        }
+
+        /* WEB AUDIO API ENGINE */
+        function enableAudio() {
+            if (!audioCtx) {
+                audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+                masterGain = audioCtx.createGain();
+                const vol = document.getElementById('master-volume').value;
+                masterGain.gain.value = parseFloat(vol);
+                masterGain.connect(audioCtx.destination);
+
+                document.getElementById('master-volume').addEventListener('input', (e) => {
+                    if (masterGain) masterGain.gain.value = parseFloat(e.target.value);
+                });
+
+                document.getElementById('audio-enable-btn').className = 'px-3 py-1.5 rounded-lg bg-cyan-500/20 text-cyan-400 border border-cyan-500/30 text-xs font-medium flex items-center gap-1.5';
+                document.getElementById('audio-enable-btn').innerHTML = `<i class="fa-solid fa-check"></i> Audio Active`;
+            }
+            if (audioCtx.state === 'suspended') audioCtx.resume();
+        }
+
+        function playPitch(pitchIdx, octave = 3, duration = 1.2, delay = 0) {
+            enableAudio();
+            if (!audioCtx) return;
+
+            const freq = 440 * Math.pow(2, (pitchIdx - 9 + (octave - 4) * 12) / 12);
+            const now = audioCtx.currentTime + delay;
+
+            const osc1 = audioCtx.createOscillator();
+            const osc2 = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+
+            osc1.type = 'triangle';
+            osc2.type = 'sawtooth';
+            osc1.frequency.setValueAtTime(freq, now);
+            osc2.frequency.setValueAtTime(freq * 2, now);
+
+            gain.gain.setValueAtTime(0.001, now);
+            gain.gain.exponentialRampToValueAtTime(0.35, now + 0.02);
+            gain.gain.exponentialRampToValueAtTime(0.0001, now + duration);
+
+            osc1.connect(gain);
+            osc2.connect(gain);
+            gain.connect(masterGain);
+
+            osc1.start(now);
+            osc2.start(now);
+            osc1.stop(now + duration);
+            osc2.stop(now + duration);
+        }
+
+        function playScaleAudio() {
+            enableAudio();
+            const scaleData = SCALES[state.scaleKey];
+            scaleData.intervals.forEach((iv, i) => {
+                const pitch = (state.rootIdx + iv) % 12;
+                playPitch(pitch, 3, 0.7, i * 0.22);
+            });
+        }
+
+        /* DRONE NOTE PLAYER */
+        function toggleDroneNote() {
+            enableAudio();
+            if (state.droneActive) {
+                stopDrone();
+            } else {
+                startDrone();
+            }
+        }
+
+        function startDrone() {
+            if (!audioCtx) return;
+            state.droneActive = true;
+            state.droneOctave = parseInt(document.getElementById('drone-octave').value);
+            state.droneWaveform = document.getElementById('drone-waveform').value;
+
+            const rootFreq = 440 * Math.pow(2, (state.rootIdx - 9 + (state.droneOctave - 4) * 12) / 12);
+            const now = audioCtx.currentTime;
+
+            droneOsc = audioCtx.createOscillator();
+            droneGain = audioCtx.createGain();
+
+            droneOsc.type = state.droneWaveform;
+            droneOsc.frequency.setValueAtTime(rootFreq, now);
+
+            droneGain.gain.setValueAtTime(0.001, now);
+            droneGain.gain.exponentialRampToValueAtTime(0.2, now + 0.5);
+
+            droneOsc.connect(droneGain);
+            droneGain.connect(masterGain);
+            droneOsc.start(now);
+
+            const noteName = (state.useFlats ? FLAT_NOTES : SHARP_NOTES)[state.rootIdx];
+            document.getElementById('drone-status-label').textContent = `Drone Active: ${noteName} (${state.droneWaveform})`;
+            document.getElementById('drone-btn-text').textContent = "Stop Drone";
+            document.getElementById('drone-icon').className = "fa-solid fa-stop";
+            document.getElementById('quick-drone-btn').textContent = `Drone: ON (${noteName})`;
+            document.getElementById('quick-drone-btn').className = "w-full px-4 py-2.5 bg-cyan-500 text-slate-950 font-bold rounded-xl text-xs flex items-center justify-center gap-2 transition-all shadow-lg shadow-cyan-500/20";
+        }
+
+        function stopDrone() {
+            if (droneOsc && audioCtx) {
+                const now = audioCtx.currentTime;
+                droneGain.gain.exponentialRampToValueAtTime(0.0001, now + 0.3);
+                droneOsc.stop(now + 0.3);
+                droneOsc = null;
+            }
+            state.droneActive = false;
+            document.getElementById('drone-status-label').textContent = "Drone Stopped";
+            document.getElementById('drone-btn-text').textContent = "Start Drone";
+            document.getElementById('drone-icon').className = "fa-solid fa-play";
+            document.getElementById('quick-drone-btn').textContent = "Drone: OFF";
+            document.getElementById('quick-drone-btn').className = "w-full px-4 py-2.5 bg-slate-950 hover:bg-slate-800 border border-slate-700 text-cyan-400 font-bold rounded-xl text-xs flex items-center justify-center gap-2 transition-all";
+        }
+
+        function restartDrone() {
+            if (state.droneActive) {
+                stopDrone();
+                startDrone();
+            }
+        }
+
+        /* SLIDE RULE RENDERER */
+        function renderSlideRule() {
+            const scaleData = SCALES[state.scaleKey];
+            const noteArray = state.useFlats ? FLAT_NOTES : SHARP_NOTES;
+            
+            document.getElementById('scale-formula-badge').textContent = `Formula: ${scaleData.formula}`;
+
+            const degRow = document.getElementById('slide-rule-degrees');
+            const noteRow = document.getElementById('slide-rule-notes');
+            const intRow = document.getElementById('slide-rule-intervals');
+
+            degRow.innerHTML = '';
+            noteRow.innerHTML = '';
+            intRow.innerHTML = '';
+
+            for (let i = 0; i < 12; i++) {
+                const pitchIdx = (state.rootIdx + i) % 12;
+                const noteName = noteArray[pitchIdx];
+                const scaleIdx = scaleData.intervals.indexOf(i);
+                const isInScale = scaleIdx !== -1;
+                const isRoot = i === 0;
+
+                const dDiv = document.createElement('div');
+                dDiv.className = `py-1 rounded ${isRoot ? 'bg-amber-400/20 text-amber-300 border border-amber-400/40' : isInScale ? 'bg-cyan-500/20 text-cyan-300 border border-cyan-500/30' : 'text-slate-600'}`;
+                dDiv.textContent = isInScale ? `Deg ${scaleIdx + 1}` : '-';
+                degRow.appendChild(dDiv);
+
+                const nDiv = document.createElement('div');
+                nDiv.className = `py-2 rounded-lg cursor-pointer transition-all ${
+                    isRoot ? 'bg-amber-400 text-slate-950 font-black shadow-lg shadow-amber-400/30' :
+                    isInScale ? 'bg-slate-800 text-cyan-400 border border-cyan-500/30' : 'bg-slate-950/60 text-slate-600 border border-slate-900'
+                }`;
+                nDiv.textContent = noteName;
+                nDiv.onclick = () => playPitch(pitchIdx, 3);
+                noteRow.appendChild(nDiv);
+
+                const iDiv = document.createElement('div');
+                iDiv.className = 'py-1 text-[10px] font-mono text-slate-400';
+                iDiv.textContent = INTERVAL_NAMES[i];
+                intRow.appendChild(iDiv);
+            }
+        }
+
+        /* DIATONIC HARMONY & NASHVILLE MATRIX */
+        function renderDiatonicHarmony() {
+            const scaleData = SCALES[state.scaleKey];
+            const noteArray = state.useFlats ? FLAT_NOTES : SHARP_NOTES;
+            const grid = document.getElementById('diatonic-harmony-grid');
+            grid.innerHTML = '';
+
+            const chordList = state.chordHarmonyType === 'triads' ? scaleData.triads : scaleData.sevenths;
+            const romanNumerals = ["I", "ii", "iii", "IV", "V", "vi", "vii°"];
+
+            if (!chordList || chordList.length === 0) {
+                grid.innerHTML = `<div class="col-span-full py-6 text-center text-slate-500 italic text-xs">Diatonic chords are available for diatonic modes & harmonic minor.</div>`;
+                return;
+            }
+
+            chordList.forEach((quality, i) => {
+                const pitchIdx = (state.rootIdx + scaleData.intervals[i]) % 12;
+                const rootName = noteArray[pitchIdx];
+                const chordName = `${rootName} ${quality}`;
+
+                const card = document.createElement('div');
+                card.className = `p-3 rounded-xl border transition-all cursor-pointer space-y-2 ${
+                    state.selectedHarmonyIdx === i 
+                    ? 'bg-slate-800 border-emerald-400 shadow-lg shadow-emerald-400/10' 
+                    : 'bg-slate-950/80 border-slate-800 hover:border-slate-700'
+                }`;
+
+                card.onclick = () => {
+                    state.selectedHarmonyIdx = i;
+                    renderDiatonicHarmony();
+                };
+
+                card.innerHTML = `
+                    <div class="flex justify-between items-center text-xs">
+                        <span class="font-mono font-extrabold text-emerald-400">${romanNumerals[i] || (i+1)}</span>
+                        <span class="text-[10px] text-slate-500 uppercase font-semibold">Degree ${i+1}</span>
+                    </div>
+                    <div class="text-sm font-bold text-white font-mono">${chordName}</div>
+                    <button onclick="event.stopPropagation(); strumChord('${rootName}','${quality}')" class="w-full py-1 bg-slate-900 hover:bg-slate-800 text-slate-300 border border-slate-700/60 rounded-lg text-[10px] font-bold transition-all">
+                        <i class="fa-solid fa-play text-emerald-400"></i> Strum
+                    </button>
+                `;
+                grid.appendChild(card);
+            });
+        }
+
+        function strumChord(rootName, quality) {
+            enableAudio();
+            const noteArray = state.useFlats ? FLAT_NOTES : SHARP_NOTES;
+            const rootIdx = noteArray.indexOf(rootName);
+            let offsets = [0, 4, 7];
+            if (quality.includes('min') || quality === 'm7') offsets = [0, 3, 7];
+            if (quality.includes('dim') || quality === 'm7b5') offsets = [0, 3, 6];
+
+            offsets.forEach((off, idx) => {
+                playPitch((rootIdx + off) % 12, 3 + Math.floor(idx / 2), 1.2, idx * 0.08);
+            });
+        }
+
+        /* 24-FRET FRETBOARD STUDIO RENDERER */
+        function renderFretboard() {
+            const scaleData = SCALES[state.scaleKey];
+            const noteArray = state.useFlats ? FLAT_NOTES : SHARP_NOTES;
+            const currentTuning = TUNINGS[state.tuningKey];
+            const scalePitches = scaleData.intervals.map(iv => (state.rootIdx + iv) % 12);
+
+            const header = document.getElementById('fret-number-header');
+            header.innerHTML = '';
+            for (let f = 0; f <= 24; f++) {
+                const fDiv = document.createElement('div');
+                fDiv.className = `w-10 flex-none text-center ${[3,5,7,9,15,17,19,21].includes(f) ? 'text-cyan-400 font-extrabold' : f === 12 || f === 24 ? 'text-amber-400 font-black' : ''}`;
+                fDiv.textContent = f === 0 ? 'Nut' : f;
+                header.appendChild(fDiv);
+            }
+
+            const grid = document.getElementById('fretboard-grid');
+            grid.innerHTML = '';
+
+            const stringNames = ["E", "B", "G", "D", "A", "E"];
+
+            currentTuning.forEach((stringBasePitch, stringIdx) => {
+                const row = document.createElement('div');
+                row.className = 'flex items-center space-x-1 relative';
+
+                const label = document.createElement('div');
+                label.className = 'w-10 flex-none text-xs font-mono font-bold text-slate-400 text-center uppercase';
+                label.textContent = noteArray[stringBasePitch];
+                row.appendChild(label);
+
+                for (let fret = 0; fret <= 24; fret++) {
+                    const pitchIdx = (stringBasePitch + fret) % 12;
+                    const isRoot = pitchIdx === state.rootIdx;
+                    const isInScale = scalePitches.includes(pitchIdx);
+                    const scalePos = scalePitches.indexOf(pitchIdx);
+
+                    const fretCell = document.createElement('div');
+                    let markerClass = '';
+                    if (stringIdx === 2 && [3,5,7,9,15,17,19,21].includes(fret)) markerClass = 'fret-marker';
+                    if (stringIdx === 2 && (fret === 12 || fret === 24)) markerClass = 'double-fret-marker';
+
+                    fretCell.className = `w-10 h-9 flex-none relative flex items-center justify-center border-r border-slate-700/60 ${fret === 0 ? 'bg-slate-900 border-r-4 border-slate-500' : 'bg-fretboardWood'} ${markerClass}`;
+
+                    const stringLine = document.createElement('div');
+                    stringLine.className = 'absolute w-full bg-slate-500/40 pointer-events-none';
+                    stringLine.style.height = `${stringIdx * 0.4 + 1.5}px`;
+                    fretCell.appendChild(stringLine);
+
+                    if (isInScale || fret === 0) {
+                        const bubble = document.createElement('div');
+                        let displayVal = noteArray[pitchIdx];
+
+                        if (state.displayMode === 'degrees' && isInScale) displayVal = scalePos + 1;
+                        else if (state.displayMode === 'intervals' && isInScale) displayVal = scaleData.intervals[scalePos] !== undefined ? INTERVAL_NAMES[scaleData.intervals[scalePos]] : '';
+                        else if (state.displayMode === 'octaves') displayVal = Math.floor((stringBasePitch + fret) / 12) + 2;
+
+                        bubble.className = `w-7 h-7 rounded-full flex items-center justify-center font-mono text-[11px] font-bold z-10 transition-transform transform hover:scale-110 cursor-pointer shadow-md ${
+                            isRoot ? 'bg-amber-400 text-slate-950 ring-2 ring-amber-300 font-black' :
+                            isInScale ? 'bg-cyan-500 text-slate-950 ring-1 ring-cyan-300' : 'bg-slate-800 text-slate-400 border border-slate-700'
+                        }`;
+                        bubble.textContent = displayVal;
+                        
+                        bubble.onclick = () => {
+                            const octave = Math.floor((stringBasePitch + fret) / 12) + 2;
+                            playPitch(pitchIdx, octave);
+                        };
+
+                        fretCell.appendChild(bubble);
+                    }
+
+                    row.appendChild(fretCell);
+                }
+                grid.appendChild(row);
+            });
+        }
+
+        /* METRONOME & SPEED TRAINER */
+        function updateBPM(val) {
+            state.bpm = parseInt(val);
+            document.getElementById('bpm-display').textContent = val;
+            if (state.metronomeRunning) {
+                stopMetronome();
+                startMetronome();
+            }
+        }
+
+        function tapTempo() {
+            const now = Date.now();
+            tapTimes.push(now);
+            if (tapTimes.length > 4) tapTimes.shift();
+            if (tapTimes.length > 1) {
+                let diffs = [];
+                for (let i = 1; i < tapTimes.length; i++) diffs.push(tapTimes[i] - tapTimes[i-1]);
+                let avg = diffs.reduce((a,b)=>a+b,0) / diffs.length;
+                let calculatedBPM = Math.round(60000 / avg);
+                if (calculatedBPM >= 40 && calculatedBPM <= 240) {
+                    document.getElementById('bpm-slider').value = calculatedBPM;
+                    updateBPM(calculatedBPM);
+                }
+            }
+        }
+
+        function toggleMetronome() {
+            if (state.metronomeRunning) stopMetronome();
+            else startMetronome();
+        }
+
+        function startMetronome() {
+            enableAudio();
+            state.metronomeRunning = true;
+            document.getElementById('metro-icon').className = "fa-solid fa-pause";
+            document.getElementById('metronome-toggle-btn').className = "w-12 h-12 rounded-full bg-amber-400 hover:bg-amber-300 text-slate-950 flex items-center justify-center font-black text-lg shadow-lg shadow-amber-400/20 transition-all";
+
+            const intervalMs = (60 / state.bpm) * 1000;
+            state.metronomeTimer = setInterval(() => {
+                state.metroBeat = (state.metroBeat % 4) + 1;
+                for (let i = 1; i <= 4; i++) {
+                    const el = document.getElementById(`metro-beat-${i}`);
+                    el.className = i === state.metroBeat ? 'w-4 h-4 rounded-full bg-emerald-400 shadow-lg shadow-emerald-400/50 scale-125 transition-all' : 'w-4 h-4 rounded-full bg-slate-800 transition-all';
+                }
+
+                if (audioCtx) {
+                    const osc = audioCtx.createOscillator();
+                    const gain = audioCtx.createGain();
+                    const now = audioCtx.currentTime;
+                    osc.frequency.setValueAtTime(state.metroBeat === 1 ? 1300 : 900, now);
+                    gain.gain.setValueAtTime(0.3, now);
+                    gain.gain.exponentialRampToValueAtTime(0.001, now + 0.05);
+                    osc.connect(gain);
+                    gain.connect(masterGain);
+                    osc.start(now);
+                    osc.stop(now + 0.05);
+                }
+            }, intervalMs);
+        }
+
+        function stopMetronome() {
+            state.metronomeRunning = false;
+            clearInterval(state.metronomeTimer);
+            document.getElementById('metro-icon').className = "fa-solid fa-play";
+            document.getElementById('metronome-toggle-btn').className = "w-12 h-12 rounded-full bg-emerald-500 hover:bg-emerald-400 text-slate-950 flex items-center justify-center font-black text-lg shadow-lg shadow-emerald-500/20 transition-all";
+            for (let i = 1; i <= 4; i++) document.getElementById(`metro-beat-${i}`).className = 'w-4 h-4 rounded-full bg-slate-800 transition-all';
+        }
+
+        /* TRAINER & FLASHCARD QUIZ */
+        function startNewQuizRound() {
+            state.quiz.string = Math.floor(Math.random() * 6);
+            state.quiz.fret = Math.floor(Math.random() * 12) + 1;
+
+            const tuning = TUNINGS[state.tuningKey];
+            const basePitch = tuning[state.quiz.string];
+            const correctPitch = (basePitch + state.quiz.fret) % 12;
+            const noteArray = state.useFlats ? FLAT_NOTES : SHARP_NOTES;
+            const correctNote = noteArray[correctPitch];
+
+            document.getElementById('quiz-prompt').textContent = `String ${6 - state.quiz.string} • Fret ${state.quiz.fret}`;
+            document.getElementById('quiz-feedback').textContent = '';
+
+            const options = [correctNote];
+            while (options.length < 4) {
+                const rnd = noteArray[Math.floor(Math.random() * 12)];
+                if (!options.includes(rnd)) options.push(rnd);
+            }
+            options.sort(() => Math.random() - 0.5);
+
+            const optContainer = document.getElementById('quiz-options');
+            optContainer.innerHTML = '';
+            options.forEach(opt => {
+                const btn = document.createElement('button');
+                btn.className = 'py-2.5 bg-slate-900 hover:bg-slate-800 border border-slate-800 text-slate-200 font-mono font-bold text-sm rounded-xl transition-all';
+                btn.textContent = opt;
+                btn.onclick = () => handleQuizAnswer(opt, correctNote);
+                optContainer.appendChild(btn);
+            });
+        }
+
+        function handleQuizAnswer(selected, correct) {
+            state.quiz.scoreTotal++;
+            const fb = document.getElementById('quiz-feedback');
+            if (selected === correct) {
+                state.quiz.scoreCorrect++;
+                state.quiz.streak++;
+                fb.className = 'h-6 text-xs font-bold text-center text-emerald-400';
+                fb.textContent = 'Correct! Excellent recognition.';
+            } else {
+                state.quiz.streak = 0;
+                fb.className = 'h-6 text-xs font-bold text-center text-red-400';
+                fb.textContent = `Incorrect! That was ${correct}.`;
+            }
+            document.getElementById('quiz-score').textContent = `Score: ${state.quiz.scoreCorrect} / ${state.quiz.scoreTotal} • Streak: ${state.quiz.streak}`;
+            setTimeout(() => startNewQuizRound(), 1200);
+        }
+
+        function resetQuizScore() {
+            state.quiz.scoreCorrect = 0;
+            state.quiz.scoreTotal = 0;
+            state.quiz.streak = 0;
+            document.getElementById('quiz-score').textContent = `Score: 0 / 0 • Streak: 0`;
+            startNewQuizRound();
+        }
+    </script>
+</body>
+</html>
