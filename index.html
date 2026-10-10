@@ -3,79 +3,149 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ultimate Guitar Scale Mastery Studio</title>
+    <title>Guitar Scale & Chord Mastery Studio</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         @keyframes pulse-glow {
             0%, 100% { box-shadow: 0 0 15px rgba(6, 182, 212, 0.4); }
             50% { box-shadow: 0 0 25px rgba(6, 182, 212, 0.8); }
+        }
         .animate-glow { animation: pulse-glow 2s infinite; }
     </style>
 </head>
-<body class="bg-slate-950 text-slate-100 min-h-screen p-4 md:p-6 font-sans transition-colors duration-300">
+<body class="bg-slate-950 text-slate-100 min-h-screen p-4 md:p-6 font-sans">
     <div class="max-w-7xl mx-auto space-y-6">
         
-        <!-- Header with Language Toggle -->
+        <!-- Header & Language Toggle -->
         <header class="flex flex-col md:flex-row justify-between items-center border-b border-slate-800 pb-4 gap-4">
             <div>
-                <h1 id="txt-title" class="text-2xl font-black tracking-wider text-cyan-400 bg-gradient-to-r from-cyan-400 to-blue-500 bg-clip-text text-transparent">GUITAR SCALE MASTERY STUDIO</h1>
-                <p id="txt-subtitle" class="text-sm text-slate-400">Interactive Slide Rule, Fretboard & Practice Suite</p>
+                <h1 id="txt-title" class="text-2xl font-black tracking-wider text-cyan-400">GUITAR SCALE & CHORD MASTERY STUDIO</h1>
+                <p id="txt-subtitle" class="text-sm text-slate-400">Created by Mario | Interactive Slide Rule, Scales & Chord Forms</p>
             </div>
             <div class="flex items-center gap-3">
-                <button onclick="toggleLang()" class="px-4 py-2 bg-slate-800 hover:bg-slate-700 text-cyan-300 rounded-lg text-sm font-bold border border-slate-700 transition-all transform hover:scale-105 active:scale-95 shadow-lg">
+                <button onclick="toggleLang()" class="px-4 py-2 bg-slate-800 hover:bg-slate-700 text-cyan-300 rounded-lg text-sm font-bold border border-slate-700 transition-all shadow-lg">
                     🌐 <span id="lang-btn-text">Español</span>
                 </button>
             </div>
         </header>
 
-        <!-- Slide Rule Controls -->
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 bg-slate-900/90 p-6 rounded-2xl border border-slate-800 shadow-2xl backdrop-blur-md">
-            <div>
-                <label id="lbl-root" class="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">Root Note</label>
-                <div id="root-notes" class="flex flex-wrap gap-1.5"></div>
+        <!-- Navigation Tabs -->
+        <nav class="flex flex-wrap gap-2 border-b border-slate-800 pb-4">
+            <button onclick="switchTab('scales')" id="tab-scales" class="px-5 py-2.5 rounded-xl font-bold text-sm bg-cyan-500 text-slate-950 shadow-lg shadow-cyan-500/30 transition-all">
+                📊 Scales & Fretboard Graph
+            </button>
+            <button onclick="switchTab('chords')" id="tab-chords" class="px-5 py-2.5 rounded-xl font-bold text-sm bg-slate-900 text-slate-300 hover:bg-slate-800 border border-slate-800 transition-all">
+                🎸 Chord Shapes (5 Forms)
+            </button>
+            <button onclick="switchTab('theory')" id="tab-theory" class="px-5 py-2.5 rounded-xl font-bold text-sm bg-slate-900 text-slate-300 hover:bg-slate-800 border border-slate-800 transition-all">
+                📖 Theory & Number System
+            </button>
+        </nav>
+
+        <!-- TAB 1: SCALES & FRETBOARD GRAPH -->
+        <div id="view-scales" class="space-y-6">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 bg-slate-900/90 p-6 rounded-2xl border border-slate-800 shadow-2xl">
+                <div>
+                    <label id="lbl-root" class="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">Root Note</label>
+                    <div id="root-notes" class="flex flex-wrap gap-1.5"></div>
+                </div>
+                <div>
+                    <label id="lbl-scale" class="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">Scale / Mode</label>
+                    <select id="scale-select" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-4 py-3 text-slate-100 font-semibold focus:outline-none focus:border-cyan-500"></select>
+                </div>
+                <div>
+                    <label id="lbl-view" class="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">Fretboard Overlay</label>
+                    <select id="overlay-select" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-4 py-3 text-slate-100 font-semibold focus:outline-none focus:border-cyan-500">
+                        <option value="all">All Scale Notes</option>
+                        <option value="root">Roots Only (Do)</option>
+                        <option value="pentatonic">Pentatonic Box</option>
+                    </select>
+                </div>
             </div>
-            <div>
-                <label id="lbl-scale" class="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">Scale / Mode</label>
-                <select id="scale-select" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-4 py-3 text-slate-100 focus:outline-none focus:border-cyan-500 transition-all font-semibold"></select>
+
+            <!-- Theory Cards -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div class="bg-slate-900/90 p-6 rounded-2xl border border-slate-800 shadow-xl">
+                    <h2 class="text-xs font-bold text-cyan-400 uppercase tracking-widest mb-3">Scale Notes / Spelling</h2>
+                    <div id="scale-notes" class="text-lg font-mono font-bold tracking-widest text-slate-100 flex flex-wrap gap-2"></div>
+                </div>
+                <div class="bg-slate-900/90 p-6 rounded-2xl border border-slate-800 shadow-xl">
+                    <h2 class="text-xs font-bold text-cyan-400 uppercase tracking-widest mb-3">Interval Formula</h2>
+                    <div id="scale-intervals" class="text-xs font-mono text-slate-300 flex flex-wrap gap-1.5"></div>
+                </div>
+                <div class="bg-slate-900/90 p-6 rounded-2xl border border-slate-800 shadow-xl">
+                    <h2 class="text-xs font-bold text-cyan-400 uppercase tracking-widest mb-3">Diatonic Chords (Nashville)</h2>
+                    <div id="diatonic-chords" class="text-xs font-mono text-slate-300 grid grid-cols-2 gap-2"></div>
+                </div>
             </div>
-            <div>
-                <label id="lbl-view" class="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">Fretboard Overlay</label>
-                <select id="overlay-select" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-4 py-3 text-slate-100 focus:outline-none focus:border-cyan-500 transition-all font-semibold">
-                    <option value="all" id="opt-all">All Scale Notes</option>
-                    <option value="root" id="opt-root">Roots Only</option>
-                    <option value="pentatonic" id="opt-penta">Pentatonic Box</option>
-                </select>
+
+            <!-- Interactive Fretboard Graph -->
+            <div class="bg-slate-900/90 p-6 rounded-2xl border border-slate-800 overflow-x-auto shadow-2xl">
+                <div class="flex justify-between items-center mb-4">
+                    <h2 class="text-xs font-bold text-cyan-400 uppercase tracking-widest">Interactive Fretboard Graph (E-A-D-G-B-E)</h2>
+                    <button onclick="playScaleAudio()" class="px-4 py-2 bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-bold rounded-xl text-xs uppercase tracking-wider transition-all shadow-lg shadow-cyan-500/30">
+                        🔊 Play Scale Audio
+                    </button>
+                </div>
+                <div id="fretboard" class="min-w-[850px] space-y-3 py-2"></div>
             </div>
         </div>
 
-        <!-- Theory Info Cards -->
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <div class="bg-slate-900/90 p-6 rounded-2xl border border-slate-800 transition-all hover:border-cyan-500/50 shadow-xl">
-                <h2 id="hdr-notes" class="text-xs font-bold text-cyan-400 uppercase tracking-widest mb-3">Scale Notes</h2>
-                <div id="scale-notes" class="text-lg font-mono font-bold tracking-widest text-slate-100 flex flex-wrap gap-2"></div>
-            </div>
-            <div class="bg-slate-900/90 p-6 rounded-2xl border border-slate-800 transition-all hover:border-cyan-500/50 shadow-xl">
-                <h2 id="hdr-intervals" class="text-xs font-bold text-cyan-400 uppercase tracking-widest mb-3">Intervals</h2>
-                <div id="scale-intervals" class="text-xs font-mono text-slate-300 flex flex-wrap gap-1.5"></div>
-            </div>
-            <div class="bg-slate-900/90 p-6 rounded-2xl border border-slate-800 transition-all hover:border-cyan-500/50 shadow-xl">
-                <h2 id="hdr-chords" class="text-xs font-bold text-cyan-400 uppercase tracking-widest mb-3">Diatonic Chords</h2>
-                <div id="diatonic-chords" class="text-xs font-mono text-slate-300 grid grid-cols-2 gap-2"></div>
+        <!-- TAB 2: CHORD SHAPES & 5 FORMS -->
+        <div id="view-chords" class="space-y-6 hidden">
+            <div class="bg-slate-900/90 p-6 rounded-2xl border border-slate-800 shadow-2xl space-y-4">
+                <h2 class="text-lg font-bold text-cyan-400">The 5 Basic Movable Chord Forms (E, A, D, G, C Forms)</h2>
+                <p class="text-sm text-slate-300">Any chord can be played in 5 different positions across the neck using bar chords derived from open string shapes[cite: 10, 11]. Select a chord type and form below to inspect its spelling and structure.</p>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">Chord Type</label>
+                        <select id="chord-type-select" onchange="updateChordDisplay()" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-4 py-3 text-slate-100 font-semibold focus:outline-none focus:border-cyan-500">
+                            <option value="Major">Major Triad (1 - 3 - 5)</option>
+                            <option value="Minor">Minor Triad (1 - b3 - 5)</option>
+                            <option value="Dominant 7">Dominant 7th (1 - 3 - 5 - b7)</option>
+                            <option value="Major 7">Major 7th (1 - 3 - 5 - 7)</option>
+                            <option value="Minor 7">Minor 7th (1 - b3 - 5 - b7)</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">Select Form</label>
+                        <select id="chord-form-select" onchange="updateChordDisplay()" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-4 py-3 text-slate-100 font-semibold focus:outline-none focus:border-cyan-500">
+                            <option value="E">E Form (Root on Low E String)</option>
+                            <option value="A">A Form (Root on A String)</option>
+                            <option value="D">D Form (Root on D String)</option>
+                            <option value="G">G Form</option>
+                            <option value="C">C Form</option>
+                        </select>
+                    </div>
+                </div>
+                <div id="chord-details-box" class="bg-slate-950 p-6 rounded-xl border border-slate-800 font-mono text-sm space-y-2"></div>
             </div>
         </div>
 
-        <!-- Interactive Fretboard -->
-        <div class="bg-slate-900/90 p-6 rounded-2xl border border-slate-800 overflow-x-auto shadow-2xl">
-            <div class="flex justify-between items-center mb-4">
-                <h2 id="hdr-fretboard" class="text-xs font-bold text-cyan-400 uppercase tracking-widest">Interactive Fretboard (E-A-D-G-B-E)</h2>
-                <button onclick="playScaleAudio()" id="btn-play" class="px-4 py-2 bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-bold rounded-xl text-xs uppercase tracking-wider transition-all transform hover:scale-105 active:scale-95 shadow-lg shadow-cyan-500/30">
-                    🔊 Play Scale
-                </button>
+        <!-- TAB 3: THEORY & NUMBER SYSTEM -->
+        <div id="view-theory" class="space-y-6 hidden">
+            <div class="bg-slate-900/90 p-6 rounded-2xl border border-slate-800 shadow-2xl space-y-4">
+                <h2 class="text-lg font-bold text-cyan-400">Music Theory & The Musical Number System</h2>
+                <p class="text-sm text-slate-300">Music is a language with an alphabet of 12 notes[cite: 6]. Pitch patterns are structured around intervals and scale degrees using numbers (1 to 8) rather than fixed letter keys[cite: 16].</p>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div class="bg-slate-950 p-5 rounded-xl border border-slate-800 space-y-2">
+                        <h3 class="font-bold text-cyan-300 text-sm">The 4 Ways to Know Every Pitch Pattern[cite: 7]</h3>
+                        <ul class="list-disc list-inside text-xs text-slate-300 space-y-1">
+                            <li><strong>Think:</strong> Music Theory & conceptual spelling[cite: 7].</li>
+                            <li><strong>Read:</strong> Notation & fretboard graph reading[cite: 7].</li>
+                            <li><strong>Hear:</strong> Ear training & interval recognition[cite: 7].</li>
+                            <li><strong>Speak:</strong> Finger patterns on your instrument[cite: 7].</li>
+                        </ul>
+                    </div>
+                    <div class="bg-slate-950 p-5 rounded-xl border border-slate-800 space-y-2">
+                        <h3 class="font-bold text-cyan-300 text-sm">Major Scale Diatonic Intervals[cite: 16]</h3>
+                        <p class="text-xs text-slate-300">Whole - Whole - Half - Whole - Whole - Whole - Half (Mostly whole steps except between 3 & 4 and 7 & 8)[cite: 16].</p>
+                    </div>
+                </div>
             </div>
-            <div id="fretboard" class="min-w-[850px] space-y-3 py-2"></div>
         </div>
 
-        <!-- Footer Disclaimer & Credits -->
+        <!-- Footer -->
         <footer class="text-center py-6 border-t border-slate-800 text-xs text-slate-500 space-y-1">
             <p id="txt-disclaimer">Free website for everyone / Sitio web gratuito para todos</p>
             <p class="font-semibold text-slate-400">Created by Mario</p>
@@ -84,40 +154,8 @@
 
     <script>
         const translations = {
-            en: {
-                title: "GUITAR SCALE MASTERY STUDIO",
-                subtitle: "Interactive Slide Rule, Fretboard & Practice Suite",
-                langBtn: "Español",
-                root: "Root Note",
-                scale: "Scale / Mode",
-                view: "Fretboard Overlay",
-                optAll: "All Scale Notes",
-                optRoot: "Roots Only",
-                optPenta: "Pentatonic Box",
-                hdrNotes: "Scale Notes",
-                hdrIntervals: "Intervals",
-                hdrChords: "Diatonic Chords",
-                hdrFretboard: "Interactive Fretboard (E-A-D-G-B-E)",
-                btnPlay: "🔊 Play Scale",
-                disclaimer: "Free website for everyone"
-            },
-            es: {
-                title: "ESTUDIO DE DOMINIO DE ESCALAS",
-                subtitle: "Regla de cálculo interactiva, diapasón y práctica",
-                langBtn: "English",
-                root: "Nota Raíz",
-                scale: "Escala / Modo",
-                view: "Vista del Diapasón",
-                optAll: "Todas las notas",
-                optRoot: "Solo Raíces",
-                optPenta: "Caja Pentatónica",
-                hdrNotes: "Notas de la Escala",
-                hdrIntervals: "Intervalos",
-                hdrChords: "Acordes Diatónicos",
-                hdrFretboard: "Diapasón Interactivo (E-A-D-G-B-E)",
-                btnPlay: "🔊 Reproducir Escala",
-                disclaimer: "Sitio web gratuito para todos"
-            }
+            en: { title: "GUITAR SCALE & CHORD MASTERY STUDIO", subtitle: "Created by Mario | Interactive Slide Rule, Scales & Chord Forms", langBtn: "Español", disclaimer: "Free website for everyone" },
+            es: { title: "ESTUDIO DE DOMINIO DE ESCALAS Y ACORDES", subtitle: "Creado por Mario | Regla de cálculo, escalas y formas de acordes", langBtn: "English", disclaimer: "Sitio web gratuito para todos" }
         };
 
         let currentLang = 'en';
@@ -138,30 +176,149 @@
         let currentOverlay = "all";
         const tuning = [4, 11, 7, 2, 9, 4];
 
-        function toggleLang() {
-            currentLang = currentLang === 'en' ? 'es' : 'en';
-            updateStaticText();
-            updateUI();
+        function switchTab(tab) {
+            ['scales', 'chords', 'theory'].forEach(t => {
+                document.getElementById(`view-${t}`).classList.add('hidden');
+                document.getElementById(`tab-${t}`).className = "px-5 py-2.5 rounded-xl font-bold text-sm bg-slate-900 text-slate-300 hover:bg-slate-800 border border-slate-800 transition-all";
+            });
+            document.getElementById(`view-${tab}`).classList.remove('hidden');
+            document.getElementById(`tab-${tab}`).className = "px-5 py-2.5 rounded-xl font-bold text-sm bg-cyan-500 text-slate-950 shadow-lg shadow-cyan-500/30 transition-all";
+            if(tab === 'chords') updateChordDisplay();
         }
 
-        function updateStaticText() {
+        function toggleLang() {
+            currentLang = currentLang === 'en' ? 'es' : 'en';
             const t = translations[currentLang];
             document.getElementById("txt-title").textContent = t.title;
             document.getElementById("txt-subtitle").textContent = t.subtitle;
             document.getElementById("lang-btn-text").textContent = t.langBtn;
-            document.getElementById("lbl-root").textContent = t.root;
-            document.getElementById("lbl-scale").textContent = t.scale;
-            document.getElementById("lbl-view").textContent = t.view;
-            document.getElementById("opt-all").textContent = t.optAll;
-            document.getElementById("opt-root").textContent = t.optRoot;
-            document.getElementById("opt-penta").textContent = t.optPenta;
-            document.getElementById("hdr-notes").textContent = t.hdrNotes;
-            document.getElementById("hdr-intervals").textContent = t.hdrIntervals;
-            document.getElementById("hdr-chords").textContent = t.hdrChords;
-            document.getElementById("hdr-fretboard").textContent = t.hdrFretboard;
-            document.getElementById("btn-play").textContent = t.btnPlay;
             document.getElementById("txt-disclaimer").textContent = t.disclaimer;
         }
 
         function init() {
-            const rootContainer = document.getElementById("root
+            const rootContainer = document.getElementById("root-notes");
+            notesSharp.forEach(note => {
+                const btn = document.createElement("button");
+                btn.textContent = note;
+                btn.className = `px-2.5 py-1.5 rounded-lg font-mono text-xs font-bold transition-all ${note === currentRoot ? 'bg-cyan-500 text-slate-950 shadow-lg shadow-cyan-500/40 animate-glow' : 'bg-slate-800 text-slate-300 hover:bg-slate-700'}`;
+                btn.onclick = () => { currentRoot = note; updateUI(); };
+                rootContainer.appendChild(btn);
+            });
+
+            const scaleSelect = document.getElementById("scale-select");
+            Object.keys(scales).forEach(scaleName => {
+                const opt = document.createElement("option");
+                opt.value = scaleName;
+                opt.textContent = scaleName;
+                scaleSelect.appendChild(opt);
+            });
+            scaleSelect.onchange = (e) => { currentScale = e.target.value; updateUI(); };
+            document.getElementById("overlay-select").onchange = (e) => { currentOverlay = e.target.value; updateUI(); };
+
+            updateUI();
+        }
+
+        function updateUI() {
+            document.querySelectorAll("#root-notes button").forEach(btn => {
+                btn.className = btn.textContent === currentRoot 
+                    ? "px-2.5 py-1.5 rounded-lg font-mono text-xs font-bold bg-cyan-500 text-slate-950 shadow-lg shadow-cyan-500/40 animate-glow" 
+                    : "px-2.5 py-1.5 rounded-lg font-mono text-xs font-bold bg-slate-800 text-slate-300 hover:bg-slate-700";
+            });
+
+            const rootIndex = notesSharp.indexOf(currentRoot);
+            const scaleData = scales[currentScale];
+            const scaleNotes = scaleData.intervals.map(iv => notesSharp[(rootIndex + iv) % 12]);
+            
+            document.getElementById("scale-notes").innerHTML = scaleNotes.map(n => `<span class="px-3 py-1 bg-slate-800/80 border border-slate-700 rounded-lg text-cyan-300 shadow-sm">${n}</span>`).join("");
+            document.getElementById("scale-intervals").innerHTML = scaleData.intervals.map((iv, i) => `<div class="bg-slate-800/80 px-2.5 py-1 rounded-md border border-slate-700">${scaleNotes[i]}: <span class="text-cyan-400">${intervalNames[iv]}</span></div>`).join("");
+
+            const chordsContainer = document.getElementById("diatonic-chords");
+            if (scaleData.chords.length > 0) {
+                const roman = ["I", "II", "III", "IV", "V", "VI", "VII"];
+                chordsContainer.innerHTML = scaleData.chords.map((chordType, i) => `<div class="bg-slate-800/80 px-3 py-1.5 rounded-lg border border-slate-700 flex justify-between items-center"><span class="text-slate-400 text-xs font-bold">${roman[i]}</span> <span class="font-bold text-slate-100">${scaleNotes[i]} ${chordType}</span></div>`).join("");
+            } else {
+                chordsContainer.innerHTML = `<div class="text-slate-500 italic col-span-2">N/A</div>`;
+            }
+
+            renderFretboard(scaleNotes, rootIndex);
+        }
+
+        function renderFretboard(scaleNotes, rootIndex) {
+            const fretboard = document.getElementById("fretboard");
+            fretboard.innerHTML = "";
+            const stringNames = ["E", "B", "G", "D", "A", "E"];
+            const numFrets = 15;
+
+            tuning.forEach((stringBaseNote, stringIdx) => {
+                const stringRow = document.createElement("div");
+                stringRow.className = "flex items-center space-x-1";
+
+                const label = document.createElement("div");
+                label.textContent = stringNames[stringIdx];
+                label.className = "w-6 text-center font-bold text-xs text-slate-400";
+                stringRow.appendChild(label);
+
+                for (let fret = 0; fret <= numFrets; fret++) {
+                    const noteIdx = (stringBaseNote + fret) % 12;
+                    const noteName = notesSharp[noteIdx];
+                    const isRoot = noteIdx === rootIndex;
+                    const isInScale = scaleNotes.includes(noteName);
+
+                    let showNote = false;
+                    if (currentOverlay === 'all' && isInScale) showNote = true;
+                    if (currentOverlay === 'root' && isRoot) showNote = true;
+                    if (currentOverlay === 'pentatonic' && isInScale && fret >= 3 && fret <= 12) showNote = true;
+                    if (fret === 0 && isInScale) showNote = true;
+
+                    const fretEl = document.createElement("div");
+                    fretEl.className = `flex-1 h-9 flex items-center justify-center text-xs font-mono rounded-md border transition-all relative ${
+                        isRoot ? 'bg-cyan-500 text-slate-950 font-black border-cyan-400 z-10' :
+                        showNote ? 'bg-slate-800 text-cyan-300 border-slate-700 font-semibold' :
+                        'bg-slate-950/40 text-slate-700 border-slate-800/40'
+                    }`;
+                    fretEl.textContent = (showNote || fret === 0) ? noteName : "";
+                    stringRow.appendChild(fretEl);
+                }
+                fretboard.appendChild(stringRow);
+            });
+        }
+
+        function updateChordDisplay() {
+            const type = document.getElementById("chord-type-select").value;
+            const form = document.getElementById("chord-form-select").value;
+            const box = document.getElementById("chord-details-box");
+            box.innerHTML = `
+                <div class="text-cyan-400 font-bold text-base mb-1">Active Shape: ${currentRoot} ${type} (${form} Form)</div>
+                <div>Formula Notes: ${type === 'Major' ? '1 - 3 - 5' : type === 'Minor' ? '1 - b3 - 5' : type === 'Dominant 7' ? '1 - 3 - 5 - b7' : '1 - 3 - 5 - 7'}</div>
+                <div class="text-slate-400 text-xs mt-2">Movable Bar Form: Root located on the ${form === 'E' || form === 'G' ? 'Low E (6th)' : form === 'A' ? 'A (5th)' : form === 'D' ? 'D (4th)' : 'B'} string[cite: 10, 11].</div>
+            `;
+        }
+
+        function playScaleAudio() {
+            if (!window.AudioContext && !window.webkitAudioContext) return;
+            const ctx = new (window.AudioContext || window.webkitAudioContext)();
+            const rootIndex = notesSharp.indexOf(currentRoot);
+            const scaleData = scales[currentScale];
+
+            scaleData.intervals.forEach((iv, idx) => {
+                setTimeout(() => {
+                    if (ctx.state === 'suspended') ctx.resume();
+                    const osc = ctx.createOscillator();
+                    const gain = ctx.createGain();
+                    osc.type = 'triangle';
+                    const freq = 220 * Math.pow(2, ((rootIndex + iv) - 9) / 12);
+                    osc.frequency.setValueAtTime(freq, ctx.currentTime);
+                    gain.gain.setValueAtTime(0.2, ctx.currentTime);
+                    gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.6);
+                    osc.connect(gain);
+                    gain.connect(ctx.destination);
+                    osc.start();
+                    osc.stop(ctx.currentTime + 0.6);
+                }, idx * 250);
+            });
+        }
+
+        window.onload = init;
+    </script>
+</body>
+</html>
