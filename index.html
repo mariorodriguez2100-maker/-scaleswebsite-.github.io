@@ -1,496 +1,169 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Guitar Scale & Chord Mastery Studio</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <style>
-        @keyframes pulse-glow {
-            0%, 100% { box-shadow: 0 0 15px rgba(6, 182, 212, 0.4); }
-            50% { box-shadow: 0 0 25px rgba(6, 182, 212, 0.8); }
-        }
-        .animate-glow { animation: pulse-glow 2s infinite; }
-    </style>
-</head>
-<body class="bg-slate-950 text-slate-100 min-h-screen p-4 md:p-6 font-sans transition-colors duration-300">
-    <div class="max-w-7xl mx-auto space-y-6">
-        
-        <!-- Header & Language Toggle -->
-        <header class="flex flex-col md:flex-row justify-between items-center border-b border-slate-800 pb-4 gap-4">
-            <div>
-                <h1 id="txt-title" class="text-2xl font-black tracking-wider text-cyan-400">GUITAR SCALE & CHORD MASTERY STUDIO</h1>
-                <p id="txt-subtitle" class="text-sm text-slate-400">Created by Mario | Interactive Slide Rule, Scales & Chord Forms</p>
-            </div>
-            <div>
-                <button onclick="toggleLang()" class="px-4 py-2 bg-slate-800 hover:bg-slate-700 text-cyan-300 rounded-lg text-sm font-bold border border-slate-700 transition-all shadow-lg">
-                    🌐 <span id="lang-btn-text">Español</span>
-                </button>
-            </div>
-        </header>
-
-        <!-- Navigation Tabs -->
-        <nav class="flex flex-wrap gap-2 border-b border-slate-800 pb-4">
-            <button onclick="switchTab('scales')" id="tab-scales" class="px-5 py-2.5 rounded-xl font-bold text-sm bg-cyan-500 text-slate-950 shadow-lg shadow-cyan-500/30 transition-all">
-                📊 Scales & Fretboard Graph
-            </button>
-            <button onclick="switchTab('chords')" id="tab-chords" class="px-5 py-2.5 rounded-xl font-bold text-sm bg-slate-900 text-slate-300 hover:bg-slate-800 border border-slate-800 transition-all">
-                🎸 Chord Shapes (5 Forms)
-            </button>
-            <button onclick="switchTab('theory')" id="tab-theory" class="px-5 py-2.5 rounded-xl font-bold text-sm bg-slate-900 text-slate-300 hover:bg-slate-800 border border-slate-800 transition-all">
-                📖 Music Theory & Number System
-            </button>
-        </nav>
-
-        <!-- TAB 1: SCALES & FRETBOARD GRAPH -->
-        <div id="view-scales" class="space-y-6">
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 bg-slate-900/90 p-6 rounded-2xl border border-slate-800 shadow-2xl">
-                <div>
-                    <label id="lbl-root" class="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">Root Note</label>
-                    <div id="root-notes" class="flex flex-wrap gap-1.5"></div>
-                </div>
-                <div>
-                    <label id="lbl-scale" class="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">Scale / Mode</label>
-                    <select id="scale-select" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-4 py-3 text-slate-100 font-semibold focus:outline-none focus:border-cyan-500"></select>
-                </div>
-                <div>
-                    <label id="lbl-view" class="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">Fretboard Overlay</label>
-                    <select id="overlay-select" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-4 py-3 text-slate-100 font-semibold focus:outline-none focus:border-cyan-500">
-                        <option value="all" id="opt-all">All Scale Notes</option>
-                        <option value="root" id="opt-root">Roots Only (Do)</option>
-                        <option value="pentatonic" id="opt-penta">Pentatonic Box</option>
-                    </select>
-                </div>
-            </div>
-
-            <!-- Theory Cards -->
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                <div class="bg-slate-900/90 p-6 rounded-2xl border border-slate-800 shadow-xl">
-                    <h2 id="hdr-notes" class="text-xs font-bold text-cyan-400 uppercase tracking-widest mb-3">Scale Notes</h2>
-                    <div id="scale-notes" class="text-lg font-mono font-bold tracking-widest text-slate-100 flex flex-wrap gap-2"></div>
-                </div>
-                <div class="bg-slate-900/90 p-6 rounded-2xl border border-slate-800 shadow-xl">
-                    <h2 id="hdr-intervals" class="text-xs font-bold text-cyan-400 uppercase tracking-widest mb-3">Intervals</h2>
-                    <div id="scale-intervals" class="text-xs font-mono text-slate-300 flex flex-wrap gap-1.5"></div>
-                </div>
-                <div class="bg-slate-900/90 p-6 rounded-2xl border border-slate-800 shadow-xl">
-                    <h2 id="hdr-chords" class="text-xs font-bold text-cyan-400 uppercase tracking-widest mb-3">Diatonic Chords</h2>
-                    <div id="diatonic-chords" class="text-xs font-mono text-slate-300 grid grid-cols-2 gap-2"></div>
-                </div>
-            </div>
-
-            <!-- Interactive Fretboard Graph -->
-            <div class="bg-slate-900/90 p-6 rounded-2xl border border-slate-800 overflow-x-auto shadow-2xl">
-                <div class="flex justify-between items-center mb-4">
-                    <h2 id="hdr-fretboard" class="text-xs font-bold text-cyan-400 uppercase tracking-widest">Interactive Fretboard (E-A-D-G-B-E)</h2>
-                    <button onclick="playScaleAudio()" id="btn-play" class="px-4 py-2 bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-bold rounded-xl text-xs uppercase tracking-wider transition-all shadow-lg shadow-cyan-500/30">
-                        🔊 Play Scale Audio
-                    </button>
-                </div>
-                <div id="fretboard" class="min-w-[850px] space-y-3 py-2"></div>
-            </div>
-        </div>
-
-        <!-- TAB 2: CHORD SHAPES & 5 FORMS -->
-        <div id="view-chords" class="space-y-6 hidden">
-            <div class="bg-slate-900/90 p-6 rounded-2xl border border-slate-800 shadow-2xl space-y-4">
-                <h2 id="chord-hdr-title" class="text-lg font-bold text-cyan-400">The 5 Basic Movable Chord Forms (E, A, D, G, C Forms)</h2>
-                <p id="chord-hdr-desc" class="text-sm text-slate-300">Any chord can be played in 5 different positions across the neck using bar chords derived from open string shapes. Select a chord type and form below to inspect its visual SVG fretboard graph.</p>
-                
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div>
-                        <label id="lbl-chord-type" class="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">Chord Type</label>
-                        <select id="chord-type-select" onchange="updateChordDisplay()" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-4 py-3 text-slate-100 font-semibold focus:outline-none focus:border-cyan-500">
-                            <option value="Major">Major Triad (1 - 3 - 5)</option>
-                            <option value="Minor">Minor Triad (1 - b3 - 5)</option>
-                            <option value="Dominant 7">Dominant 7th (1 - 3 - 5 - b7)</option>
-                            <option value="Major 7">Major 7th (1 - 3 - 5 - 7)</option>
-                            <option value="Minor 7">Minor 7th (1 - b3 - 5 - b7)</option>
-                        </select>
-                    </div>
-                    <div>
-                        <label id="lbl-chord-form" class="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">Select Form</label>
-                        <select id="chord-form-select" onchange="updateChordDisplay()" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-4 py-3 text-slate-100 font-semibold focus:outline-none focus:border-cyan-500">
-                            <option value="E">E Form (Root on Low E String)</option>
-                            <option value="A">A Form (Root on A String)</option>
-                            <option value="D">D Form (Root on D String)</option>
-                            <option value="G">G Form (Root on E/D Strings)</option>
-                            <option value="C">C Form (Root on A/B Strings)</option>
-                        </select>
-                    </div>
-                </div>
-
-                <!-- Graphical Chord Fretboard Box -->
-                <div class="bg-slate-950 p-6 rounded-xl border border-slate-800 space-y-4">
-                    <div id="chord-info-text" class="font-mono text-sm text-cyan-300 font-bold"></div>
-                    <div id="chord-graph-container" class="overflow-x-auto py-2 flex justify-center"></div>
-                </div>
-            </div>
-        </div>
-
-        <!-- TAB 3: THEORY & NUMBER SYSTEM -->
-        <div id="view-theory" class="space-y-6 hidden">
-            <div class="bg-slate-900/90 p-6 rounded-2xl border border-slate-800 shadow-2xl space-y-6">
-                <div>
-                    <h2 id="theory-title-1" class="text-xl font-bold text-cyan-400 mb-2">Music is a Language with 6 Parts of Speech</h2>
-                    <p id="theory-desc-1" class="text-sm text-slate-300 leading-relaxed">According to Scotty West's system, music is literally a language. Your guitar is a "dumb machine" or typewriter used to type pitch patterns. To be a real player, you must master the 6 main areas of music: <strong>Pitch, Rhythm, Timbre, Dynamics, Technique, and Notation</strong>.</p>
-                </div>
-
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div class="bg-slate-950 p-5 rounded-xl border border-slate-800 space-y-3">
-                        <h3 class="font-bold text-cyan-300 text-sm uppercase tracking-wide">The 4 Ways to Know Every Pitch Pattern</h3>
-                        <ul class="list-disc list-inside text-xs text-slate-300 space-y-2">
-                            <li><strong class="text-slate-100">Think (Music Theory):</strong> Memorize spelling, grammar, and vocabulary formulas.</li>
-                            <li><strong class="text-slate-100">Read (Notation):</strong> Interpret staff notation, tablature, and fretboard grids.</li>
-                            <li><strong class="text-slate-100">Hear (Ear Training):</strong> Recognize and sing interval sounds and chord qualities.</li>
-                            <li><strong class="text-slate-100">Speak (Technique):</strong> Finger patterns on the fretboard to make your guitar express ideas.</li>
-                        </ul>
-                    </div>
-
-                    <div class="bg-slate-950 p-5 rounded-xl border border-slate-800 space-y-3">
-                        <h3 class="font-bold text-cyan-300 text-sm uppercase tracking-wide">The Musical Number System</h3>
-                        <p class="text-xs text-slate-300 leading-relaxed">Instead of memorizing thousands of variations across 12 distinct alphabetical keys, the number system treats music as if there is only <strong>one universal key</strong>. The Major Diatonic Scale intervals serve as benchmark numbers (1 to 8) to measure all chords and scale patterns instantly.</p>
-                    </div>
-                </div>
-
-                <!-- Complete Library Modules Added -->
-                <div class="border-t border-slate-800 pt-6 space-y-4">
-                    <h3 class="text-lg font-bold text-cyan-400">Guitar Knowledge Library & Masterclass Reference</h3>
-                    
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <div class="bg-slate-950 p-5 rounded-xl border border-slate-800 space-y-2">
-                            <h4 class="font-bold text-cyan-300 text-sm">1. The 12 Pitch Dictionary & Chromatic Scale</h4>
-                            <p class="text-xs text-slate-300">Music consists of 7 basic pitch names (A-B-C-D-E-F-G). Sharps (#) raise pitch by a half-step; flats (b) lower it. <strong>The "BE" Rule:</strong> All notes have natural sharps except B and E (no B# or E#).</p>
-                            <div class="font-mono text-xs text-cyan-400 mt-2">C - C# - D - D# - E - F - F# - G - G# - A - A# - B</div>
-                        </div>
-
-                        <div class="bg-slate-950 p-5 rounded-xl border border-slate-800 space-y-2">
-                            <h4 class="font-bold text-cyan-300 text-sm">2. CAGED System Overview</h4>
-                            <p class="text-xs text-slate-300">Any major or minor chord can be played across 5 distinct neck positions using shapes derived from open <strong>C, A, G, E, and D</strong> chords.</p>
-                            <ul class="text-xs text-slate-300 list-disc list-inside">
-                                <li><strong>C Form:</strong> Root on 5th String (A)</li>
-                                <li><strong>A Form:</strong> Root on 5th String (A)</li>
-                                <li><strong>G Form:</strong> Root on 6th String (E)</li>
-                                <li><strong>E Form:</strong> Root on 6th String (E)</li>
-                                <li><strong>D Form:</strong> Root on 4th String (D)</li>
-                            </ul>
-                        </div>
-
-                        <div class="bg-slate-950 p-5 rounded-xl border border-slate-800 space-y-2">
-                            <h4 class="font-bold text-cyan-300 text-sm">3. Diatonic Scale Formulas</h4>
-                            <p class="text-xs text-slate-300"><strong>Major Scale Formula:</strong> W - W - H - W - W - W - H (Half-steps strictly between degrees 3-4 and 7-8).</p>
-                            <p class="text-xs text-slate-300"><strong>Natural Minor Formula:</strong> W - H - W - W - H - W - W.</p>
-                        </div>
-
-                        <div class="bg-slate-950 p-5 rounded-xl border border-slate-800 space-y-2">
-                            <h4 class="font-bold text-cyan-300 text-sm">4. Modal Harmony Reference</h4>
-                            <p class="text-xs text-slate-300">The 7 rotational scale centers derived from the Major Scale:</p>
-                            <div class="text-xs text-slate-300 grid grid-cols-2 gap-1 mt-1">
-                                <div>1. Ionian (Major)</div>
-                                <div>2. Dorian (min w/ 6th)</div>
-                                <div>3. Phrygian (min w/ b2)</div>
-                                <div>4. Lydian (Maj w/ #4)</div>
-                                <div>5. Mixolydian (Maj w/ b7)</div>
-                                <div>6. Aeolian (Natural Minor)</div>
-                                <div class="col-span-2">7. Locrian (Diminished)</div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Footer -->
-        <footer class="text-center py-6 border-t border-slate-800 text-xs text-slate-500 space-y-1">
-            <p id="txt-disclaimer">Free website for everyone / Sitio web gratuito para todos</p>
-            <p class="font-semibold text-slate-400">Created by Mario</p>
-        </footer>
-    </div>
-
-    <script>
-        const translations = {
-            en: {
-                title: "GUITAR SCALE & CHORD MASTERY STUDIO",
-                subtitle: "Created by Mario | Interactive Slide Rule, Scales & Chord Forms",
-                langBtn: "Español",
-                tabScales: "📊 Scales & Fretboard Graph",
-                tabChords: "🎸 Chord Shapes (5 Forms)",
-                tabTheory: "📖 Music Theory & Number System",
-                lblRoot: "Root Note",
-                lblScale: "Scale / Mode",
-                lblView: "Fretboard Overlay",
-                optAll: "All Scale Notes",
-                optRoot: "Roots Only (Do)",
-                optPenta: "Pentatonic Box",
-                hdrNotes: "Scale Notes",
-                hdrIntervals: "Intervals",
-                hdrChords: "Diatonic Chords",
-                hdrFretboard: "Interactive Fretboard (E-A-D-G-B-E)",
-                btnPlay: "🔊 Play Scale Audio",
-                chordHdrTitle: "The 5 Basic Movable Chord Forms (E, A, D, G, C Forms)",
-                chordHdrDesc: "Any chord can be played in 5 different positions across the neck using bar chords derived from open string shapes. Select a chord type and form below to inspect its visual SVG fretboard graph.",
-                lblChordType: "Chord Type",
-                lblChordForm: "Select Form",
-                theoryTitle1: "Music is a Language with 6 Parts of Speech",
-                theoryDesc1: "According to Scotty West's system, music is literally a language. Your guitar is a 'dumb machine' or typewriter used to type pitch patterns. To be a real player, you must master the 6 main areas of music: Pitch, Rhythm, Timbre, Dynamics, Technique, and Notation.",
-                disclaimer: "Free website for everyone"
-            },
-            es: {
-                title: "ESTUDIO DE DOMINIO DE ESCALAS Y ACORDES",
-                subtitle: "Creado por Mario | Regla de cálculo, escalas y formas de acordes",
-                langBtn: "English",
-                tabScales: "📊 Escalas y Gráfica del Diapasón",
-                tabChords: "🎸 Formas de Acordes (5 Formas)",
-                tabTheory: "📖 Teoría Musical y Sistema Numérico",
-                lblRoot: "Nota Raíz",
-                lblScale: "Escala / Modo",
-                lblView: "Vista del Diapasón",
-                optAll: "Todas las notas",
-                optRoot: "Solo Raíces (Do)",
-                optPenta: "Caja Pentatónica",
-                hdrNotes: "Notas de la Escala",
-                hdrIntervals: "Intervalos",
-                hdrChords: "Acordes Diatónicos",
-                hdrFretboard: "Diapasón Interactivo (E-A-D-G-B-E)",
-                btnPlay: "🔊 Reproducir Escala",
-                chordHdrTitle: "Las 5 Formas Básicas de Acordes Móviles (Formas E, A, D, G, C)",
-                chordHdrDesc: "Cualquier acorde se puede tocar en 5 posiciones diferentes utilizando acordes de cejilla derivados de figuras al aire. Selecciona un tipo de acorde y forma abajo para ver su gráfica SVG en el diapasón.",
-                lblChordType: "Tipo de Acorde",
-                lblChordForm: "Seleccionar Forma",
-                theoryTitle1: "La música es un idioma con 6 partes de la oración",
-                theoryDesc1: "Según el sistema de Scotty West, la música es literalmente un idioma. Tu guitarra es una 'máquina tonta' o máquina de escribir para teclear patrones de altura. Para ser un músico real, debes dominar las 6 áreas principales: Tono, Ritmo, Timbre, Dinámica, Técnica y Notación.",
-                disclaimer: "Sitio web gratuito para todos"
-            }
-        };
-
-        let currentLang = 'en';
-        const notesSharp = ["C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B"];
-        const scales = {
-            "Major (Ionian)": { intervals: [0, 2, 4, 5, 7, 9, 11], chords: ["Maj", "min", "min", "Maj", "Maj", "min", "dim"] },
-            "Natural Minor (Aeolian)": { intervals: [0, 2, 3, 5, 7, 8, 10], chords: ["min", "dim", "Maj", "min", "min", "Maj", "Maj"] },
-            "Pentatonic Major": { intervals: [0, 2, 4, 7, 9], chords: [] },
-            "Pentatonic Minor": { intervals: [0, 3, 5, 7, 10], chords: [] },
-            "Blues": { intervals: [0, 3, 5, 6, 7, 10], chords: [] },
-            "Dorian": { intervals: [0, 2, 3, 5, 7, 9, 10], chords: ["min", "min", "Maj", "Maj", "min", "dim", "Maj"] },
-            "Mixolydian": { intervals: [0, 2, 4, 5, 7, 9, 10], chords: ["Maj", "min", "dim", "Maj", "min", "min", "Maj"] }
-        };
-        const intervalNames = {0: "R", 1: "b2", 2: "2", 3: "b3", 4: "3", 5: "4", 6: "b5/#4", 7: "5", 8: "b6", 9: "6", 10: "b7", 11: "7"};
-
-        let currentRoot = "C";
-        let currentScale = "Major (Ionian)";
-        let currentOverlay = "all";
-        const tuning = [4, 11, 7, 2, 9, 4];
-
-        function switchTab(tab) {
-            ['scales', 'chords', 'theory'].forEach(t => {
-                document.getElementById(`view-${t}`).classList.add('hidden');
-                document.getElementById(`tab-${t}`).className = "px-5 py-2.5 rounded-xl font-bold text-sm bg-slate-900 text-slate-300 hover:bg-slate-800 border border-slate-800 transition-all";
-            });
-            document.getElementById(`view-${tab}`).classList.remove('hidden');
-            document.getElementById(`tab-${tab}`).className = "px-5 py-2.5 rounded-xl font-bold text-sm bg-cyan-500 text-slate-950 shadow-lg shadow-cyan-500/30 transition-all";
-            if(tab === 'chords') updateChordDisplay();
-        }
-
-        function toggleLang() {
-            currentLang = currentLang === 'en' ? 'es' : 'en';
-            const t = translations[currentLang];
-            document.getElementById("txt-title").textContent = t.title;
-            document.getElementById("txt-subtitle").textContent = t.subtitle;
-            document.getElementById("lang-btn-text").textContent = t.langBtn;
-            document.getElementById("tab-scales").textContent = t.tabScales;
-            document.getElementById("tab-chords").textContent = t.tabChords;
-            document.getElementById("tab-theory").textContent = t.tabTheory;
-            document.getElementById("lbl-root").textContent = t.lblRoot;
-            document.getElementById("lbl-scale").textContent = t.lblScale;
-            document.getElementById("lbl-view").textContent = t.lblView;
-            document.getElementById("opt-all").textContent = t.optAll;
-            document.getElementById("opt-root").textContent = t.optRoot;
-            document.getElementById("opt-penta").textContent = t.optPenta;
-            document.getElementById("hdr-notes").textContent = t.hdrNotes;
-            document.getElementById("hdr-intervals").textContent = t.hdrIntervals;
-            document.getElementById("hdr-chords").textContent = t.hdrChords;
-            document.getElementById("hdr-fretboard").textContent = t.hdrFretboard;
-            document.getElementById("btn-play").textContent = t.btnPlay;
-            document.getElementById("chord-hdr-title").textContent = t.chordHdrTitle;
-            document.getElementById("chord-hdr-desc").textContent = t.chordHdrDesc;
-            document.getElementById("lbl-chord-type").textContent = t.lblChordType;
-            document.getElementById("lbl-chord-form").textContent = t.lblChordForm;
-            document.getElementById("theory-title-1").textContent = t.theoryTitle1;
-            document.getElementById("theory-desc-1").textContent = t.theoryDesc1;
-            document.getElementById("txt-disclaimer").textContent = t.disclaimer;
-        }
-
-        function init() {
-            const rootContainer = document.getElementById("root-notes");
-            notesSharp.forEach(note => {
-                const btn = document.createElement("button");
-                btn.textContent = note;
-                btn.className = `px-2.5 py-1.5 rounded-lg font-mono text-xs font-bold transition-all ${note === currentRoot ? 'bg-cyan-500 text-slate-950 shadow-lg shadow-cyan-500/40 animate-glow' : 'bg-slate-800 text-slate-300 hover:bg-slate-700'}`;
-                btn.onclick = () => { currentRoot = note; updateUI(); };
-                rootContainer.appendChild(btn);
-            });
-
-            const scaleSelect = document.getElementById("scale-select");
-            Object.keys(scales).forEach(scaleName => {
-                const opt = document.createElement("option");
-                opt.value = scaleName;
-                opt.textContent = scaleName;
-                scaleSelect.appendChild(opt);
-            });
-            scaleSelect.onchange = (e) => { currentScale = e.target.value; updateUI(); };
-            document.getElementById("overlay-select").onchange = (e) => { currentOverlay = e.target.value; updateUI(); };
-
-            updateUI();
-        }
-
-        function updateUI() {
-            document.querySelectorAll("#root-notes button").forEach(btn => {
-                btn.className = btn.textContent === currentRoot 
-                    ? "px-2.5 py-1.5 rounded-lg font-mono text-xs font-bold bg-cyan-500 text-slate-950 shadow-lg shadow-cyan-500/40 animate-glow" 
-                    : "px-2.5 py-1.5 rounded-lg font-mono text-xs font-bold bg-slate-800 text-slate-300 hover:bg-slate-700";
-            });
-
-            const rootIndex = notesSharp.indexOf(currentRoot);
-            const scaleData = scales[currentScale];
-            const scaleNotes = scaleData.intervals.map(iv => notesSharp[(rootIndex + iv) % 12]);
-            
-            document.getElementById("scale-notes").innerHTML = scaleNotes.map(n => `<span class="px-3 py-1 bg-slate-800/80 border border-slate-700 rounded-lg text-cyan-300 shadow-sm">${n}</span>`).join("");
-            document.getElementById("scale-intervals").innerHTML = scaleData.intervals.map((iv, i) => `<div class="bg-slate-800/80 px-2.5 py-1 rounded-md border border-slate-700">${scaleNotes[i]}: <span class="text-cyan-400">${intervalNames[iv]}</span></div>`).join("");
-
-            const chordsContainer = document.getElementById("diatonic-chords");
-            if (scaleData.chords.length > 0) {
-                const roman = ["I", "II", "III", "IV", "V", "VI", "VII"];
-                chordsContainer.innerHTML = scaleData.chords.map((chordType, i) => `<div class="bg-slate-800/80 px-3 py-1.5 rounded-lg border border-slate-700 flex justify-between items-center"><span class="text-slate-400 text-xs font-bold">${roman[i]}</span> <span class="font-bold text-slate-100">${scaleNotes[i]} ${chordType}</span></div>`).join("");
-            } else {
-                chordsContainer.innerHTML = `<div class="text-slate-500 italic col-span-2">N/A</div>`;
-            }
-
-            renderFretboard(scaleNotes, rootIndex);
-        }
-
-        function renderFretboard(scaleNotes, rootIndex) {
-            const fretboard = document.getElementById("fretboard");
-            fretboard.innerHTML = "";
-            const stringNames = ["E", "B", "G", "D", "A", "E"];
-            const numFrets = 15;
-
-            tuning.forEach((stringBaseNote, stringIdx) => {
-                const stringRow = document.createElement("div");
-                stringRow.className = "flex items-center space-x-1";
-
-                const label = document.createElement("div");
-                label.textContent = stringNames[stringIdx];
-                label.className = "w-6 text-center font-bold text-xs text-slate-400";
-                stringRow.appendChild(label);
-
-                for (let fret = 0; fret <= numFrets; fret++) {
-                    const noteIdx = (stringBaseNote + fret) % 12;
-                    const noteName = notesSharp[noteIdx];
-                    const isRoot = noteIdx === rootIndex;
-                    const isInScale = scaleNotes.includes(noteName);
-
-                    let showNote = false;
-                    if (currentOverlay === 'all' && isInScale) showNote = true;
-                    if (currentOverlay === 'root' && isRoot) showNote = true;
-                    if (currentOverlay === 'pentatonic' && isInScale && fret >= 3 && fret <= 12) showNote = true;
-                    if (fret === 0 && isInScale) showNote = true;
-
-                    const fretEl = document.createElement("div");
-                    fretEl.className = `flex-1 h-9 flex items-center justify-center text-xs font-mono rounded-md border transition-all relative ${
-                        isRoot ? 'bg-cyan-500 text-slate-950 font-black border-cyan-400 z-10' :
-                        showNote ? 'bg-slate-800 text-cyan-300 border-slate-700 font-semibold' :
-                        'bg-slate-950/40 text-slate-700 border-slate-800/40'
-                    }`;
-                    fretEl.textContent = (showNote || fret === 0) ? noteName : "";
-                    stringRow.appendChild(fretEl);
-                }
-                fretboard.appendChild(stringRow);
-            });
-        }
-
-        function updateChordDisplay() {
-            const type = document.getElementById("chord-type-select").value;
-            const form = document.getElementById("chord-form-select").value;
-            
-            document.getElementById("chord-info-text").innerHTML = `
-                <div>Active Chord: <span class="text-cyan-400">${currentRoot} ${type}</span> (${form} Form Shape)</div>
-                <div class="text-xs text-slate-400 mt-1">Formula: ${type === 'Major' ? '1 - 3 - 5 (Root, Major 3rd, Perfect 5th)' : type === 'Minor' ? '1 - b3 - 5 (Root, Minor 3rd, Perfect 5th)' : type === 'Dominant 7' ? '1 - 3 - 5 - b7' : '1 - 3 - 5 - 7'}</div>
-            `;
-
-            // Render interactive SVG Fretboard Grid
-            const container = document.getElementById("chord-graph-container");
-            container.innerHTML = `
-              <div style="font-family: sans-serif; background: #121212; padding: 15px; border-radius: 8px; color: #fff; width: 100%; max-width: 450px;">
-                <svg viewBox="0 0 400 200" width="100%" height="100%" style="background: #1e1e1e; border-radius: 6px;">
-                    <!-- Fret Labels -->
-                    <text x="85" y="30" fill="#aaa" font-size="12">Fret</text>
-                    <text x="155" y="30" fill="#aaa" font-size="12">+1</text>
-                    <text x="225" y="30" fill="#aaa" font-size="12">+2</text>
-                    <text x="295" y="30" fill="#aaa" font-size="12">+3</text>
-
-                    <!-- Fret Divider Lines -->
-                    <line x1="80" y1="45" x2="80" y2="175" stroke="#666" stroke-width="4" />
-                    <line x1="150" y1="45" x2="150" y2="175" stroke="#444" stroke-width="2" />
-                    <line x1="220" y1="45" x2="220" y2="175" stroke="#444" stroke-width="2" />
-                    <line x1="290" y1="45" x2="290" y2="175" stroke="#444" stroke-width="2" />
-                    <line x1="360" y1="45" x2="360" y2="175" stroke="#444" stroke-width="2" />
-
-                    <!-- Guitar Strings (Low E to High E) -->
-                    <line x1="80" y1="55" x2="360" y2="55" stroke="#ccc" stroke-width="1.5" />
-                    <line x1="80" y1="79" x2="360" y2="79" stroke="#ccc" stroke-width="2" />
-                    <line x1="80" y1="103" x2="360" y2="103" stroke="#ccc" stroke-width="2.5" />
-                    <line x1="80" y1="127" x2="360" y2="127" stroke="#ccc" stroke-width="3" />
-                    <line x1="80" y1="151" x2="360" y2="151" stroke="#ccc" stroke-width="3.5" />
-                    <line x1="80" y1="175" x2="360" y2="175" stroke="#ccc" stroke-width="4" />
-
-                    <!-- Note Markers for ${currentRoot} (${form} Form) -->
-                    <circle cx="115" cy="175" r="11" fill="#e74c3c" />
-                    <text x="115" y="179" fill="#fff" font-size="10" font-weight="bold" text-anchor="middle">${currentRoot}</text>
-
-                    <circle cx="255" cy="151" r="11" fill="#3498db" />
-                    <text x="255" y="155" fill="#fff" font-size="10" font-weight="bold" text-anchor="middle">5</text>
-
-                    <circle cx="255" cy="127" r="11" fill="#e74c3c" />
-                    <text x="255" y="131" fill="#fff" font-size="10" font-weight="bold" text-anchor="middle">${currentRoot}</text>
-
-                    <circle cx="185" cy="103" r="11" fill="#2ecc71" />
-                    <text x="185" y="107" fill="#fff" font-size="10" font-weight="bold" text-anchor="middle">3</text>
-
-                    <circle cx="115" cy="79" r="11" fill="#3498db" />
-                    <text x="115" y="83" fill="#fff" font-size="10" font-weight="bold" text-anchor="middle">5</text>
-
-                    <circle cx="115" cy="55" r="11" fill="#e74c3c" />
-                    <text x="115" y="59" fill="#fff" font-size="10" font-weight="bold" text-anchor="middle">${currentRoot}</text>
-                </svg>
-              </div>
-            `;
-        }
-
-        function playScaleAudio() {
-            if (!window.AudioContext && !window.webkitAudioContext) return;
-            const ctx = new (window.AudioContext || window.webkitAudioContext)();
-            const rootIndex = notesSharp.indexOf(currentRoot);
-            const scaleData = scales[currentScale];
-
-            scaleData.intervals.forEach((iv, idx) => {
-                setTimeout(() => {
-                    if (ctx.state === 'suspended') ctx.resume();
-                    const osc = ctx.createOscillator();
-                    const gain = ctx.createGain();
-                    osc.type = 'triangle';
-                    const freq = 220 * Math.pow(2, ((rootIndex + iv) - 9) / 12);
-                    osc.frequency.setValueAtTime(freq, ctx.currentTime);
-                    gain.gain.setValueAtTime(0.2, ctx.currentTime);
-                    gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.6);
-                    osc.connect(gain);
-                    gain.connect(ctx.destination);
-                    osc.start();
-                    osc.stop(ctx.currentTime + 0.6);
-                }, idx * 250);
-            });
-        }
-
-        window.onload = init;
-    </script>
-</body>
-</html>
+<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>ScalesMaster · Guitar Wiki</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@500;700&family=Newsreader:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#0d1310;--p:#16201a;--l:#2a3830;--t:#ece6d6;--m:#98a69b;--a:#e8c547;--r:#e5484d;--o:#f08a24;--y:#e8c547;--g:#46b86c;--b:#4a90e2;--i:#7a6ff0;--v:#b565d9}
+*{box-sizing:border-box}html{scroll-behavior:smooth}
+body{margin:0;color:var(--t);font:16.5px/1.55 Newsreader,Georgia,serif;display:grid;grid-template-columns:240px 1fr;min-height:100vh;background:radial-gradient(900px 500px at 85% -10%,#24361f 0,transparent 60%),radial-gradient(700px 500px at 0 100%,#1b2740 0,transparent 55%),var(--bg);background-attachment:fixed}
+h1,h2,h3,button,select,input,th,nav a,.ui{font-family:'Bricolage Grotesque',system-ui,sans-serif}
+aside{background:#111a15ee;backdrop-filter:blur(8px);border-right:1px solid var(--l);padding:16px 12px;position:sticky;top:0;height:100vh;overflow:auto}
+aside h1{font-size:22px;margin:0;background:linear-gradient(90deg,var(--a),var(--o),var(--r),var(--v),var(--b),var(--g),var(--a));background-size:300% 100%;-webkit-background-clip:text;background-clip:text;color:transparent;animation:flow 9s linear infinite}
+@keyframes flow{to{background-position:300% 0}}
+aside small{color:var(--m)}#q{width:100%;margin:12px 0 6px;padding:8px 11px;background:var(--bg);border:1px solid var(--l);border-radius:8px;color:var(--t);transition:border-color .2s,box-shadow .2s}
+#q:focus{border-color:var(--a);box-shadow:0 0 0 3px #e8c54733;outline:0}
+nav h4{margin:12px 0 3px;font:700 12px 'Bricolage Grotesque';color:var(--a);letter-spacing:.04em}
+nav a{display:block;padding:4px 9px;margin:1px 0;border-radius:6px;color:var(--t);text-decoration:none;font-size:14px;border-left:3px solid transparent;transition:transform .15s,background .15s,border-color .15s}
+nav a:hover{background:var(--l);transform:translateX(4px)}nav a.on{background:#e8c5471f;border-left-color:var(--a);color:var(--a);font-weight:700}
+main{padding:22px clamp(14px,2.4vw,36px) 40px;max-width:1320px;min-width:0}
+h2{font-size:32px;line-height:1.1;margin:0 0 4px;position:relative;padding-bottom:10px}
+h2::after{content:"";position:absolute;left:0;bottom:0;height:3px;width:90px;border-radius:3px;background:linear-gradient(90deg,var(--r),var(--o),var(--y),var(--g),var(--b),var(--v));animation:grow .7s cubic-bezier(.2,.8,.2,1)}
+@keyframes grow{from{width:0}}
+h3{font-size:17px;margin:14px 0 4px;color:var(--a);break-after:avoid}
+p{margin:0 0 .7em}b{color:#fff7dc}a{color:var(--a)}
+ul,ol{margin:0 0 .8em;padding-left:1.2em}li{margin:.2em 0}li::marker{color:var(--a)}
+.card{background:linear-gradient(160deg,#1a261f,#131c17);border:1px solid var(--l);border-radius:12px;padding:12px 14px;margin:10px 0;overflow-x:auto;box-shadow:0 6px 24px #0006;transition:transform .2s,border-color .2s}
+.card:hover{border-color:#456052}
+button,select{background:var(--l);color:var(--t);border:1px solid #3a4a40;border-radius:8px;padding:6px 11px;font-size:14px;cursor:pointer;transition:transform .15s,background .15s,box-shadow .15s}
+button:hover,select:hover{transform:translateY(-2px);background:#364a3e;box-shadow:0 4px 12px #0006}button:active{transform:scale(.94)}
+button.on{background:var(--a);color:#1a1608;border-color:var(--a);box-shadow:0 0 14px #e8c54766}
+:focus-visible{outline:2px solid var(--a);outline-offset:2px}
+.row{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin:6px 0}
+.chip{padding:3px 11px;border-radius:99px;font:700 14px 'Bricolage Grotesque';color:#10150f;transition:transform .15s}.chip:hover{transform:scale(1.12) rotate(-2deg)}
+table{border-collapse:collapse;font-size:14.5px;width:100%;margin:6px 0 10px;break-inside:avoid}th,td{padding:4px 9px;border-bottom:1px solid var(--l);text-align:left}
+th{color:var(--a);font-size:12.5px;background:#e8c5470f}tr:nth-child(even) td{background:#ffffff06}tr:hover td{background:#e8c54712}
+code,.f{font-family:ui-monospace,monospace;color:var(--a);font-size:.9em;background:#e8c5471a;padding:1px 6px;border-radius:5px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:10px}.grid .card{margin:0;padding:8px;text-align:center}.grid .card:hover{transform:translateY(-5px) rotate(-.6deg)}
+.bars{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}.bars div{background:#0d1310;border:1px solid var(--l);border-radius:8px;padding:9px;text-align:center;font:700 17px 'Bricolage Grotesque';transition:transform .15s,border-color .15s}.bars div:hover{transform:scale(1.06);border-color:var(--a)}
+.two{display:grid;grid-template-columns:minmax(0,1.3fr) minmax(0,1fr);gap:14px;align-items:start}.two .card{margin:0}
+.art{columns:2 400px;column-gap:34px;margin-top:10px}.art>*{break-inside:avoid-column}.art table,.art .row,.art .bars{break-inside:avoid}
+.art>p:first-child{column-span:all;max-width:none;font-size:1.18em;line-height:1.5;color:#fff7dc;border-left:3px solid var(--a);padding:2px 0 2px 14px;margin-bottom:14px;background:linear-gradient(90deg,#e8c54712,transparent)}
+.art>.card{column-span:all}.bt{transition:transform .1s,background .1s}.bt.on{background:var(--a)!important;color:#10150f!important;transform:scale(1.3)}input[type=range]{accent-color:var(--a)}.dot{transform-box:fill-box;transform-origin:center;animation:pop .45s cubic-bezier(.3,1.6,.5,1) backwards}
+@keyframes pop{from{transform:scale(0);opacity:0}}
+.dot:hover{transform:scale(1.35);transition:transform .15s}
+@media(max-width:900px){.two{grid-template-columns:1fr}body{display:block}aside{position:static;height:auto;max-height:46vh}}
+@media(prefers-reduced-motion:no-preference){main>*{animation:up .45s cubic-bezier(.2,.8,.2,1) backwards}
+main>:nth-child(2){animation-delay:.05s}main>:nth-child(3){animation-delay:.1s}main>:nth-child(4){animation-delay:.15s}main>:nth-child(5){animation-delay:.2s}main>:nth-child(n+6){animation-delay:.25s}
+.grid .card{animation:up .5s cubic-bezier(.2,.8,.2,1) backwards}.grid .card:nth-child(2){animation-delay:.08s}.grid .card:nth-child(3){animation-delay:.16s}.grid .card:nth-child(4){animation-delay:.24s}.grid .card:nth-child(5){animation-delay:.32s}
+.chip{animation:pop .4s cubic-bezier(.3,1.6,.5,1) backwards}.chip:nth-child(2){animation-delay:.05s}.chip:nth-child(3){animation-delay:.1s}.chip:nth-child(4){animation-delay:.15s}.chip:nth-child(5){animation-delay:.2s}.chip:nth-child(n+6){animation-delay:.25s}
+@keyframes up{from{opacity:0;transform:translateY(14px)}}}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style></head><body>
+<aside><h1>ScalesMaster</h1><small id="sub">Guitar wiki for lessons</small>
+<input id="q" type="search" placeholder="Search the wiki…" aria-label="Search"><nav id="nav"></nav>
+<div class="row"><button id="lang" onclick="L=L=='en'?'es':'en';nav();go()">ES</button></div></aside>
+<main id="m"></main>
+<script>
+const N=['C','C#','D','D#','E','F','F#','G','G#','A','A#','B'],FL=['C','Db','D','Eb','E','F','Gb','G','Ab','A','Bb','B'];
+const FLATKEYS=[5,10,3,8,1,6];let root=0,L='en',scaleK='Major (Ionian)',ov='all',lab='note',ctype='Major';
+const nm=i=>(FLATKEYS.includes(root)?FL:N)[(i%12+12)%12];
+const COL=['--r','--o','--o','--y','--y','--g','--g','--b','--i','--i','--v','--v'];const col=s=>`var(${COL[(s%12+12)%12]})`;
+const IV=['R','b2','2','b3','3','4','b5','5','b6','6','b7','7'];
+const SC={'Major (Ionian)':[0,2,4,5,7,9,11],'Dorian':[0,2,3,5,7,9,10],'Phrygian':[0,1,3,5,7,8,10],'Lydian':[0,2,4,6,7,9,11],'Mixolydian':[0,2,4,5,7,9,10],'Natural Minor (Aeolian)':[0,2,3,5,7,8,10],'Locrian':[0,1,3,5,6,8,10],'Harmonic Minor':[0,2,3,5,7,8,11],'Melodic Minor':[0,2,3,5,7,9,11],'Pentatonic Major':[0,2,4,7,9],'Pentatonic Minor':[0,3,5,7,10],'Blues':[0,3,5,6,7,10],'Whole Tone':[0,2,4,6,8,10],'Chromatic':[0,1,2,3,4,5,6,7,8,9,10,11]};
+const TU=[4,11,7,2,9,4];
+const T={es:{Search:'Buscar en la wiki…',Explore:'Explorar',Fretboard:'Diapasón y escalas',Chords:'Acordes CAGED',sub:'Wiki de guitarra para clases','Show degrees':'Ver grados','Show note names':'Ver notas',Play:'Reproducir','All scale notes':'Todas las notas','Roots only':'Solo raíces','Chord tones 1-3-5':'Notas del acorde 1-3-5',Basics:'Básicos',Scales:'Escalas',Harmony:'Armonía',Songs:'Canciones',Practice:'Práctica','No results':'Sin resultados','Note trainer':'Entrenador de notas',String:'Cuerda',Fret:'Traste',Score:'Puntos',Metronome:'Metrónomo','Chord pair':'Pareja de acordes'}};
+const t=k=>(T[L]&&T[L][k])||k;
+function tbl(h,r){return`<table><tr>${h.map(x=>`<th>${x}</th>`).join('')}</tr>${r.map(x=>`<tr>${x.map(c=>`<td>${c}</td>`).join('')}</tr>`).join('')}</table>`}
+const sEl=(a,b)=>document.querySelector(a)&&0;
+function rootBtns(f){return`<div class="row ui">${N.map((n,i)=>`<button class="${i==root?'on':''}" onclick="root=${i};${f}()">${nm(i)}</button>`).join('')}</div>`}
+function quality(s,i){const n=s.length,a=(s[(i+2)%n]-s[i]+12)%12,b=(s[(i+4)%n]-s[i]+12)%12;return a==4&&b==7?['','maj']:a==3&&b==7?['m','min']:a==3&&b==6?['dim','dim']:a==4&&b==8?['aug','aug']:['?','']}
+function seventh(s,i){const n=s.length,q=quality(s,i)[0],c=(s[(i+6)%n]-s[i]+12)%12;return q==''?(c==11?'maj7':c==10?'7':''):q=='m'?(c==10?'m7':c==11?'m(maj7)':''):q=='dim'?(c==10?'m7b5':c==9?'dim7':''):'aug'}
+/* ---------- FRETBOARD ---------- */
+function viewFret(){
+ const s=SC[scaleK],set=s.map(x=>(root+x)%12),W=900,fw=(W-50)/15;
+ let svg=`<svg viewBox="0 0 ${W} 190" style="min-width:760px;width:100%" role="img" aria-label="Fretboard">`;
+ for(let f=0;f<=15;f++)svg+=`<line x1="${40+f*fw}" x2="${40+f*fw}" y1="20" y2="150" stroke="${f?'#4a5a50':'#d8d0b8'}" stroke-width="${f?1.5:5}"/>`;
+ [3,5,7,9,12,15].forEach(f=>{svg+=`<text x="${40+(f-.5)*fw}" y="176" fill="#98a69b" font-size="12" text-anchor="middle">${f}</text>`});
+ for(let st=0;st<6;st++){const y=26+st*21.6;svg+=`<line x1="40" x2="${W-10}" y1="${y}" y2="${y}" stroke="#8d9a90" stroke-width="${.8+st*.4}"/>`;
+  for(let f=0;f<=15;f++){const ni=(TU[st]+f)%12,rel=(ni-root+12)%12,inS=set.includes(ni);
+   let show=ov=='all'?inS:ov=='roots'?rel==0:inS&&[0,2,4].map(k=>s[k]).includes(rel);if(!show)continue;
+   const x=f?40+(f-.5)*fw:22;svg+=`<g class="dot" style="animation-delay:${(f*6+st)*10}ms"><circle cx="${x}" cy="${y}" r="9.5" fill="${col(rel)}" ${rel==0?'stroke="#fff" stroke-width="2"':''}/><text x="${x}" y="${y+4}" font-size="10.5" font-weight="700" fill="#10150f" text-anchor="middle">${lab=='note'?nm(ni):IV[rel]}</text></g>`}}
+ svg+='</svg>';
+ const dc=s.length==7?s.map((x,i)=>{const q=quality(s,i);return`<tr><td>${['I','II','III','IV','V','VI','VII'][i]}</td><td><b>${nm(root+x)}${q[0]}</b></td><td>${nm(root+x)}${seventh(s,i)}</td></tr>`}).join(''):'';
+ return`<h2>${t('Fretboard')}</h2>${rootBtns('go')}<div class="row"><select id="sc" onchange="scaleK=this.value;go()" aria-label="Scale">${Object.keys(SC).map(k=>`<option ${k==scaleK?'selected':''}>${k}</option>`).join('')}</select>
+ <select onchange="ov=this.value;go()" aria-label="Overlay">${[['all','All scale notes'],['roots','Roots only'],['tri','Chord tones 1-3-5']].map(o=>`<option value="${o[0]}" ${ov==o[0]?'selected':''}>${t(o[1])}</option>`).join('')}</select>
+ <button onclick="lab=lab=='note'?'deg':'note';go()">${t(lab=='note'?'Show degrees':'Show note names')}</button><button onclick="play()">▶ ${t('Play')}</button></div>
+ <div class="card">${svg}</div>
+ <div class="two"><div><div class="row">${s.map(x=>`<span class="chip" style="background:${col(x)}">${nm(root+x)} <small>${IV[x]}</small></span>`).join('')}</div>
+ ${stepBar(SC[scaleK])}<p>${L=='es'?'El color del punto sigue el grado, como en las tablas de colores de Scotty West: raíz roja, 2ª naranja, 3ª amarilla, 4ª verde, 5ª azul, 6ª índigo, 7ª violeta.':`Dot colour follows the degree, like Scotty West's colour-coded charts: root red, 2nd orange, 3rd yellow, 4th green, 5th blue, 6th indigo, 7th violet.`}</p></div>
+ ${dc?`<div class="card">${tbl(['Degree','Triad','7th chord'],dc.split('</tr>').filter(Boolean).map(r=>[...r.matchAll(/<td>(.*?)<\/td>/g)].map(m=>m[1])))}</div>`:''}</div>`}
+function play(){const c=new (window.AudioContext||window.webkitAudioContext)();SC[scaleK].concat([12]).forEach((x,i)=>{const o=c.createOscillator(),g=c.createGain();o.type='triangle';o.frequency.value=220*2**((root+x-9)/12);g.gain.setValueAtTime(.25,c.currentTime+i*.3);g.gain.exponentialRampToValueAtTime(.001,c.currentTime+i*.3+.5);o.connect(g);g.connect(c.destination);o.start(c.currentTime+i*.3);o.stop(c.currentTime+i*.3+.55)})}
+/* ---------- CAGED CHORDS (offsets from root fret, low E → high E; null = muted) ---------- */
+const X=null,FORMS={E:{s:0,Major:[0,2,2,1,0,0],Minor:[0,2,2,0,0,0],'Dominant 7':[0,2,0,1,0,0],'Minor 7':[0,2,0,0,0,0],'Major 7':[0,2,1,1,0,0]},
+A:{s:1,Major:[X,0,2,2,2,0],Minor:[X,0,2,2,1,0],'Dominant 7':[X,0,2,0,2,0],'Minor 7':[X,0,2,0,1,0],'Major 7':[X,0,2,1,2,0]},
+D:{s:2,Major:[X,X,0,2,3,2],Minor:[X,X,0,2,3,1],'Dominant 7':[X,X,0,2,1,2],'Minor 7':[X,X,0,2,1,1],'Major 7':[X,X,0,2,2,2]},
+C:{s:1,Major:[X,0,-1,-3,-2,-3],Minor:[X,0,-2,-3,-2,X],'Dominant 7':[X,0,-1,0,-2,-3],'Minor 7':[X,0,-2,0,-2,X],'Major 7':[X,0,-1,-3,-3,-3]},
+G:{s:0,Major:[0,-1,-3,-3,-3,0],Minor:[0,-2,-3,-3,0,0],'Dominant 7':[0,-1,-3,-3,-3,-2],'Minor 7':[0,-2,-3,-3,0,-2],'Major 7':[0,-1,-3,-3,-3,-1]}};
+function diagram(f){const F=FORMS[f],sh=F[ctype],rs=F.s;let r=((root-TU[rs])%12+12)%12;
+ const mn=Math.min(...sh.filter(v=>v!==X));while(r+mn<0)r+=12;if(r==0&&f=='D')r=12;
+ const fr=sh.map(v=>v===X?X:r+v),used=fr.filter(v=>v!==X),lo=Math.min(...used.filter(v=>v>0),99),base=Math.max(used.some(v=>v==0)&&Math.max(...used)<=4?1:lo,1),W=170;
+ let s=`<svg viewBox="0 0 ${W} 150" width="100%" role="img" aria-label="${f} form">`;
+ for(let i=0;i<6;i++)s+=`<line x1="${28+i*24}" x2="${28+i*24}" y1="28" y2="138" stroke="#8d9a90"/>`;
+ for(let k=0;k<=5;k++)s+=`<line x1="28" x2="148" y1="${28+k*22}" y2="${28+k*22}" stroke="${k==0&&base==1?'#d8d0b8':'#4a5a50'}" stroke-width="${k==0&&base==1?4:1}"/>`;
+ if(base>1)s+=`<text x="2" y="44" fill="#98a69b" font-size="11">${base}fr</text>`;
+ fr.forEach((v,i)=>{const x=28+i*24;if(v===X){s+=`<text x="${x}" y="20" fill="#98a69b" font-size="12" text-anchor="middle">×</text>`;return}
+  const ni=(TU[i]+v)%12,rel=(ni-root+12)%12;if(v==0&&base==1){s+=`<circle cx="${x}" cy="17" r="5" fill="none" stroke="${col(rel)}" stroke-width="2"/>`;return}
+  const y=28+(v-base+.5)*22;s+=`<circle cx="${x}" cy="${y}" r="9" fill="${col(rel)}"/><text x="${x}" y="${y+3.5}" font-size="9.5" font-weight="700" fill="#10150f" text-anchor="middle">${IV[rel]}</text>`});
+ return s+'</svg>'}
+function viewChords(){return`<h2>${t('Chords')}</h2><p>${L=='es'?'Cada acorde tiene cinco formas móviles, nombradas por los acordes abiertos de los que vienen. Se conectan en el mástil en el orden <b>C – A – G – E – D</b>. Nombre = raíz + tipo + forma, por ejemplo “Bb Maj7 en forma de A”.':`Every chord has five movable shapes, named after the open chords they come from. They connect up the neck in the order <b>C – A – G – E – D</b>. Chord name = root + type + form, e.g. “Bb Maj7 in the A form”.`}</p>${rootBtns('go')}
+ <div class="row"><select onchange="ctype=this.value;go()" aria-label="Chord type">${['Major','Minor','Dominant 7','Minor 7','Major 7'].map(c=>`<option ${c==ctype?'selected':''}>${c}</option>`).join('')}</select></div>
+ <div class="grid">${['C','A','G','E','D'].map(f=>`<div class="card"><b class="ui">${nm(root)} ${ctype} · ${L=='es'?'forma '+f:f+' form'}</b>${diagram(f)}<small>${L=='es'?'raíz en cuerda':'root on string'} ${6-FORMS[f].s}</small></div>`).join('')}</div>
+ <p>${L=='es'?'Los puntos muestran el intervalo de cada nota (R, 3, b3, 5, b7…). Los círculos vacíos son cuerdas al aire, × es cuerda apagada. Las formas con número de traste son cejillas.':`Dots show the interval each note plays (R, 3, b3, 5, b7…). Open circles are open strings, × means muted. Shapes with a fret label are barre chords.`}</p>`}
+/* ---------- WIKI ---------- */
+const circ=()=>{let s='<svg viewBox="-110 -110 220 220" width="260" role="img" aria-label="Circle of fifths">';const K=['C','G','D','A','E','B','F#','Db','Ab','Eb','Bb','F'],R=['Am','Em','Bm','F#m','C#m','G#m','D#m','Bbm','Fm','Cm','Gm','Dm'];K.forEach((k,i)=>{const a=i*Math.PI/6-Math.PI/2;s+=`<text x="${88*Math.cos(a)}" y="${88*Math.sin(a)+5}" fill="#ece6d6" font-size="15" font-weight="700" text-anchor="middle" style="cursor:pointer" onclick="root=${ki(k)};go()">${k}</text><text x="${56*Math.cos(a)}" y="${56*Math.sin(a)+4}" fill="#98a69b" font-size="11" text-anchor="middle">${R[i]}</text>`});return s+'</svg>'};
+const W=[
+['Basics','The 12 notes',()=>`<p>Music uses 7 letter names, <code>A B C D E F G</code>, plus sharps (raise) and flats (lower). Between 12 notes the pattern repeats: that distance is an <b>octave</b>.</p><p class="f">C C# D D# E F F# G G# A A# B</p><p><b>The “BE” rule:</b> every note has a sharp except B and E (no B# or E# at this stage), because there's no black key between B–C and E–F. Sharp and flat names of the same pitch (C#/Db) are <b>enharmonics</b>; sharps are used going up, flats going down.</p><p>The 12-note <b>chromatic scale</b> is the “dictionary” everything else is drawn from. One fret = one half step; two frets = a whole step.</p>`],
+['Basics','Number system & intervals',()=>`<p>Instead of 12 keys, number the notes of the major scale 1–8 and treat music as <b>one universal key</b>. A major chord is 1-3-5 in any key; a power chord is 1-5-8; the most common progression is 1-4-5. Sharp or flat the numbers for notes in between. 9, 11, 13 are 2, 4, 6 an octave up.</p>${tbl(['Semitones','Interval','Number'],[[0,'Unison','1'],[1,'Minor 2nd','b2'],[2,'Major 2nd','2'],[3,'Minor 3rd','b3'],[4,'Major 3rd','3'],[5,'Perfect 4th','4'],[6,'Tritone (aug 4 / dim 5)','b5 / #4'],[7,'Perfect 5th','5'],[8,'Minor 6th','b6'],[9,'Major 6th','6'],[10,'Minor 7th','b7'],[11,'Major 7th','7'],[12,'Octave','8']])}<h3>Inversion</h3><p>Flip an interval and the two numbers add up to 9 (3rd↔6th). Major↔minor and augmented↔diminished swap; perfect stays perfect (4th↔5th).</p><h3>Harmonics</h3><p>Harmonics at frets 12, 7 and 5 give the octave, 5th and 4th: the notes 1-5-8 that hold the whole language together.</p>`],
+['Basics','Tuning & fretboard',()=>`<p>Strings low to high: <b>E A D G B E</b> (6th→1st). Neighbours are 5 frets apart except G–B, which is 4, because 4 fingers = 4 frets. To play all 12 notes: low E with fingers 1-4, then continue on the next string.</p><p>Beyond 5 frets use <b>index shifts</b> going up and <b>pinky shifts</b> coming down. Any scale fits in a 6-fret “box”, so you can play any scale in any key anywhere on the neck.</p><p>Learn notes on the 6th string first (each fret is the next chromatic note), then cross-reference the 5th, 3rd and 2nd strings with octave shapes.</p>${trainer()}`],
+['Basics','6 areas & 4 ways to know a pattern',()=>`<p>Music is a language with six parts: <b>Pitch</b> (notes, scales, chords), <b>Rhythm</b>, <b>Timbre</b>, <b>Dynamics</b>, <b>Technique</b> and <b>Notation</b>. Your guitar is a typewriter: you play with your mind, not your fingers.</p><p>Know every pattern four ways: <b>Think</b> (theory), <b>Read</b> (notation), <b>Hear</b> (ear training), <b>Speak</b> (fingerings).</p><p>Being a real player takes two things: get to the end of the song, and ask “how did I do?” on all six areas, ideally by recording yourself.</p>`],
+['Scales','Major scale & keys',()=>`<p>Formula: <code>W W H W W W H</code> (half steps between 3–4 and 7–8). To build any key, write the letters from the root, then sharp or flat notes until the pattern fits. G has F#; D has F# and C#.</p>${rootBtns('go')}<p class="f">${nm(root)} major: ${SC['Major (Ionian)'].map(x=>nm(root+x)).join(' ')}</p><div class="row"><div>${circ()}</div><div>${tbl(['Key','Accidentals'],[['C','none'],['G','F#'],['D','F# C#'],['A','F# C# G#'],['E','F# C# G# D#'],['F','Bb'],['Bb','Bb Eb'],['Eb','Bb Eb Ab'],['Ab','Bb Eb Ab Db']])}</div></div><p>Click a key to see its notes. Clockwise = 5ths, adding sharps. Counter-clockwise = flats. The inner ring is the relative minor, which shares the key signature (A minor = C major).</p>`],
+['Scales','Modes',()=>`<p>The same 7 notes give 7 scales depending on which note is “home”. The mode is set by the chord you are emphasizing, not the position on the neck.</p>${tbl(['Mode','Degree','Formula','Sound'],[['Ionian','I','1 2 3 4 5 6 7','Major'],['Dorian','ii','1 2 b3 4 5 6 b7','Minor with major 6th'],['Phrygian','iii','1 b2 b3 4 5 b6 b7','Minor, dark (b2)'],['Lydian','IV','1 2 3 #4 5 6 7','Major, dreamy (#4)'],['Mixolydian','V','1 2 3 4 5 6 b7','Major, bluesy (b7)'],['Aeolian','vi','1 2 b3 4 5 b6 b7','Natural minor'],['Locrian','vii°','1 b2 b3 4 b5 b6 b7','Diminished']])}<p>Compare modes from the same root: Ionian→Lydian raises the 4th, Ionian→Mixolydian lowers the 7th, Aeolian→Dorian raises the 6th, Aeolian→Phrygian lowers the 2nd.</p>${modeX()}`],
+['Scales','Minor scales',()=>`${tbl(['Scale','Formula','Use'],[['Natural minor','1 2 b3 4 5 b6 b7','Home chord is minor; v is minor'],['Harmonic minor','1 2 b3 4 5 b6 7','Raised 7th makes the V chord major; has an augmented 2nd'],['Melodic minor','1 2 b3 4 5 6 7','Raised 6th and 7th; play it from the 2nd of the key over a dominant 7 (D melodic minor over G7)']])}<p>In a minor key: i, iv, v are minor; III, VI, VII are major. The V is often borrowed from the major key.</p>`],
+['Scales','Pentatonic & blues',()=>`<p><b>Major pentatonic</b> 1 2 3 5 6 · <b>Minor pentatonic</b> 1 b3 4 5 b7. The minor pentatonic is the 6th mode of the major. With no 4th or 7th, major pentatonic works as a simplified Ionian, Lydian or Mixolydian.</p><p><b>Blues scale</b> 1 b3 4 b5 5 b7 = minor pentatonic + the blue note b5. Add the major 3rd (the “blues 3rd”) for the major-blues flavour. Mixing major and minor pentatonic is the <b>hybrid scale</b>.</p><p>Over a I–IV–V blues the blue notes are the b3/3, #4/b5 and b7. Each pentatonic mode leaves out two notes, so don't skip important ones such as the 5th or the root.</p>`],
+['Scales','Exotic scales',()=>tbl(['Scale','Formula'],[['Neapolitan minor','1 b2 b3 4 5 b6 7'],['Double harmonic','1 b2 3 4 5 b6 7'],['Hungarian minor','1 2 b3 #4 5 b6 7'],['Phrygian dominant (Spanish)','1 b2 3 4 5 b6 b7'],['Hirajoshi','1 2 b3 5 b6'],['Iwato','1 b2 4 b5 b7'],['Whole tone','1 2 3 #4 #5 #6'],['Diminished (whole-half)','1 2 b3 4 b5 b6 bb7 7'],['Harmonic major','1 2 3 4 5 b6 7'],['Lydian b7 (Overtone)','1 2 3 #4 5 6 b7']])],
+['Chords','Triads & chord formulas',()=>`<p>Stack 3rds on a scale: major = M3 + m3, minor = m3 + M3, diminished = m3 + m3, augmented = M3 + M3. In a major key: <b>I, IV, V major · ii, iii, vi minor · vii° diminished</b>, the same in every key.</p>${tbl(['Chord','Name','Formula'],[['C','Major','1 3 5'],['Cm','Minor','1 b3 5'],['Caug','Augmented','1 3 #5'],['Cdim','Diminished','1 b3 b5'],['Csus2 / sus4','Suspended','1 2 5 / 1 4 5'],['C6','Six','1 3 5 6'],['Cm6','Minor six','1 b3 5 6'],['C7','Dominant 7','1 3 5 b7'],['Cmaj7','Major 7','1 3 5 7'],['Cm7','Minor 7','1 b3 5 b7'],['Cm(maj7)','Minor-major 7','1 b3 5 7'],['Cm7b5','Half-diminished','1 b3 b5 b7'],['Cdim7','Full diminished','1 b3 b5 bb7'],['C7sus4','Seven sus 4','1 4 5 b7']])}<p>A “7” in a chord name means b7. A suspension replaces the 3rd, creating tension that wants to resolve.</p>`],
+['Chords','Extended chords',()=>`<p>9, 11 and 13 are the 2, 4 and 6 above the octave. Stacked: <code>1 3 5 7 9 11 13</code>. On guitar you drop notes:</p>${tbl(['Chord','Can omit'],[['9th','The 5th (R-3-7-9 shape on string 5 with the 9 on string 2)'],['11th','The 3rd (it clashes with the 11), the 5th, or the 9th; or use #11'],['13th','5th, 9th/11th, or even the root (rootless voicings)']])}<p>Dominant 7 chords have three 9ths: 9, #9, b9. 13ths are mostly used on dominant and major 7 chords, rarely on minor 7.</p>`],
+['Chords','CAGED system',()=>`<p>Five open shapes (C A G E D) become movable chords. Their order on the neck never changes: <b>C–A–G–E–D</b>. Roots: E and G forms on the 6th string, A and C on the 5th, D on the 4th.</p><p>Triad <b>inversions</b>: root position has the root lowest; 1st inversion has the 3rd lowest; 2nd inversion has the 5th lowest. Voicings can be closed (notes a 3rd apart) or open (spread over octaves).</p><p>To read a chord: find the form, then the type, then slide the bar until the root note lands on the right fret. Open the <a href="#chords" style="color:var(--a)">Chords page</a> to see them.</p>`],
+['Harmony','Diatonic harmony',()=>`<p>Most songs use only the 7 notes of one major scale and the 7 chords built on them. Each chord has its own mode.</p>${tbl(['Degree','Major key','Mode over it'],[['I','Major','Ionian'],['ii','Minor','Dorian'],['iii','Minor','Phrygian'],['IV','Major','Lydian'],['V','Major (or 7)','Mixolydian'],['vi','Minor','Aeolian'],['vii°','Diminished','Locrian']])}<p>In G major: G Am Bm C D Em F#°, which covers G–C–D–Em–Am, the most common set of pop chords. 7th chords: Imaj7, ii7, iii7, IVmaj7, V7, vi7, viiø7.</p><p>Modal music (Dorian or Mixolydian) is built the same way from a different home chord: Em–A is E Dorian (key of D), D–C–G–D is D Mixolydian (key of G).</p>`],
+['Harmony','Finding the key',()=>`<p>Look at the first and last chords, and the chord that feels like <b>home</b>. If that is major you're probably in a major key; if minor, a minor or modal key. Check which key contains all the chords: Em–A only fits D major, so with Em as home it is E Dorian.</p><h3>Modulation</h3><p>Keys connect through <b>pivot chords</b> (a chord that belongs to both keys). Others: shifting the whole progression up a half or whole step for drama, borrowing one chord, or following the circle of 4ths (C–F–Bb–Eb…). Diminished chords can pivot to many keys.</p>`],
+['Songs','Progressions',()=>progUI()],
+['Songs','12-bar blues',()=>`<p>Three 4-bar lines: <code>I I I I · IV IV I I · V IV I V</code> (the last bar is the turnaround). In minor: <code>i i i i · iv iv i i · v iv i v</code>. Chords are usually dominant 7ths, and 9ths or 13ths add colour.</p><p>The classic <b>shuffle</b> is a power chord whose 5th moves to the 6th and back. Over the I–IV–V use blues/minor pentatonic with the b3, #4 and b7 as blue notes.</p>${bars(['I7','I7','I7','I7','IV7','IV7','I7','I7','V7','IV7','I7','V7'])}`],
+['Practice','Practice routines',()=>`<ul><li>Practice chords in <b>pairs</b>, back and forth every 4 beats, non-stop for 5 minutes, with a drum machine or metronome.</li><li>Start slow, then raise the tempo. Think ahead to the next chord and listen for buzzes.</li><li>Use strums to shrink switching time: 1 per bar, 2, 4, then 8ths.</li><li>Practise chromatic scales daily, touching all 4 frets with 4 fingers.</li><li>Improvisation: practise daily, use backing tracks in a key you know, begin with one chord, tell a story, use dynamics, record yourself.</li></ul>${practiceUI()}`],
+['Practice','Notation & rhythm',()=>`<p>Written music is a graph: height = pitch, left to right = time. Guitar is written an octave above where it sounds. Tab has 6 lines (strings) with fret numbers.</p>${tbl(['Note','Beats (4/4)'],[['Whole','4'],['Half','2'],['Quarter','1'],['Eighth','½'],['Sixteenth','¼']])}<p>Time signature: top = beats per bar, bottom = which note is one beat (4 = quarter). A dot adds half the value; a tie joins notes. Tab symbols: h hammer-on, p pull-off, / slide, b bend, r release, x mute, PM palm mute.</p><p>Chord charts: X = don't play, O = open string, numbers = fingers (1 index … 4 pinky).</p>`]];
+function bars(a){return`<div class="bars">${a.map(x=>`<div>${x.replace(/^(i{1,3}|I{1,3}|IV|iv|V|v)/,m=>chordOf(m))}</div>`).join('')}</div>`}
+function chordOf(r){const M={I:0,i:0,IV:5,iv:5,V:7,v:7};return nm(root+M[r])+(r==r.toLowerCase()?'m':'')}
+const PR={'I – IV – V':[[0,''],[5,''],[7,'']],'I – vi – IV – V (doo-wop)':[[0,''],[9,'m'],[5,''],[7,'']],'ii – V – I (jazz)':[[2,'m7'],[7,'7'],[0,'maj7']],'I – V – vi – IV':[[0,''],[7,''],[9,'m'],[5,'']],'i – VII – VI – VII (minor)':[[0,'m'],[10,''],[8,''],[10,'']],'i – iv – v (minor)':[[0,'m'],[5,'m'],[7,'m']]};
+let pk='I – IV – V';
+function progUI(){return`<p>Think in Roman numerals so a progression moves to any key. Pick a key above or here:</p>${rootBtns('go')}<select onchange="pk=this.value;go()" aria-label="Progression">${Object.keys(PR).map(k=>`<option ${k==pk?'selected':''}>${k}</option>`).join('')}</select><div class="bars" style="margin-top:10px">${PR[pk].map(c=>`<div>${nm(root+c[0])}${c[1]}</div>`).join('')}</div>
+<h3>Songs</h3>${tbl(['Progression','Songs (key)'],[['I–IV–V','La Bamba (C), Twist and Shout (D), Wild Thing (A)'],['I–vi–IV–V','Stand by Me (A), Every Breath You Take (A), Y.M.C.A. (F#)'],['I–V–vi–IV','Let It Be (C), Someone Like You (A)'],['Minor','Stairway to Heaven (Am), Rolling in the Deep (Bm), All Along the Watchtower (C#m)']])}`}
+function viewWiki(i){const w=W[i],e=L=='es'&&ES[i];return`<h2>${e?e[0]:w[1]}</h2><small class="ui" style="color:var(--m)">${t(w[0])}</small>${L=='es'&&!e?'<p class="f">Este artículo aún no está traducido al español.</p>':''}<div class="art">${(e?e[1]:w[2])()}</div>`}
+const ki=k=>{let i=N.indexOf(k);return i<0?FL.indexOf(k):i};
+let tq={s:0,f:0},sc=[0,0],mT=null,mAC=null,bpm=80;
+function nq(){tq={s:Math.floor(Math.random()*6),f:Math.floor(Math.random()*13)};document.getElementById('tq').textContent=`${t('String')} ${6-tq.s} · ${t('Fret')} ${tq.f}`}
+function ans(i){const n=(TU[tq.s]+tq.f)%12,ok=i==n;sc[1]++;if(ok)sc[0]++;const e=document.getElementById('tq');e.style.color=ok?'var(--g)':'var(--r)';document.getElementById('ts').textContent=`${t('Score')}: ${sc[0]}/${sc[1]}`+(ok?'':` · ${N[n]}`);setTimeout(()=>{e.style.color='';nq()},ok?350:900)}
+function trainer(){return`<div class="card"><b class="ui">${t('Note trainer')}</b><div id="tq" class="f" style="font-size:26px;margin:6px 0">–</div><div class="row">${N.map((n,i)=>`<button onclick="ans(${i})">${n}</button>`).join('')}</div><small id="ts"></small></div>`}
+function initW(){if(document.getElementById('tq'))nq()}
+function mt(){const bb=document.getElementById('mb');if(mT){clearInterval(mT);mT=null;if(bb)bb.textContent='▶';return}mAC=mAC||new (window.AudioContext||window.webkitAudioContext)();let b=0;const tick=()=>{const o=mAC.createOscillator(),g=mAC.createGain();o.frequency.value=b%4?700:1100;g.gain.setValueAtTime(.3,mAC.currentTime);g.gain.exponentialRampToValueAtTime(.001,mAC.currentTime+.08);o.connect(g);g.connect(mAC.destination);o.start();o.stop(mAC.currentTime+.09);document.querySelectorAll('.bt').forEach((e,i)=>e.classList.toggle('on',i==b%4));const cp=document.getElementById('cp');if(cp)cp.textContent=document.getElementById(Math.floor(b/4)%2?'cb':'ca').value;b++};tick();mT=setInterval(tick,60000/bpm);bb.textContent='■'}
+const CH=['C','G','Am','Em','D','A','E','F','Dm'];
+function practiceUI(){const o=d=>`<select id="${d}" aria-label="Chord">${CH.map((c,i)=>`<option ${i==(d=='ca'?0:1)?'selected':''}>${c}</option>`).join('')}</select>`;return`<div class="card"><b class="ui">${t('Metronome')} + ${t('Chord pair')}</b><div class="row"><button id="mb" onclick="mt()">▶</button><input type="range" min="40" max="200" value="${bpm}" oninput="bpm=+this.value;document.getElementById('bv').textContent=bpm;if(mT){mt();mt()}" aria-label="BPM"><b id="bv">${bpm}</b> BPM ${[1,2,3,4].map(i=>`<span class="bt chip" style="background:#2a3830;color:var(--t)">${i}</span>`).join('')}</div><div class="row">${o('ca')} ⇄ ${o('cb')}</div><div id="cp" class="f" style="font-size:44px;text-align:center">–</div></div>`}
+function modeX(){const k=root,n=SC['Major (Ionian)'].map(x=>(k+x)%12),names=L=='es'?['Jónico','Dórico','Frigio','Lidio','Mixolidio','Eólico','Locrio']:['Ionian','Dorian','Phrygian','Lydian','Mixolydian','Aeolian','Locrian'];return`<div class="card">${rootBtns('go')}<small>${nm(k)} major</small>${names.map((m,i)=>`<div class="row"><b style="width:110px">${nm(n[i])} ${m}</b>${[...Array(7)].map((_,j)=>{const ni=n[(i+j)%7];return`<span class="chip" style="background:${col((ni-n[i]+12)%12)}">${nm(ni)}</span>`}).join('')}</div>`).join('')}</div>`}
+function stepBar(s){const a=s.concat([12]),e=L=='es';return`<div class="row" style="flex-wrap:nowrap;gap:3px;margin:10px 0">${s.map((x,i)=>{const d=a[i+1]-x;return`<div class="ui" style="flex:${d};min-width:26px;text-align:center;background:${col(x)};color:#10150f;border-radius:6px;font-weight:700;padding:2px 0;font-size:13px">${d==1?(e?'S':'H'):d==2?(e?'T':'W'):d==3?(e?'T+S':'W+H'):d}</div>`}).join('')}</div>`}
+const ES={
+0:['Las 12 notas',()=>`<p>La música usa 7 nombres, <code>A B C D E F G</code> (C=Do, D=Re, E=Mi, F=Fa, G=Sol, A=La, B=Si), más sostenidos (suben) y bemoles (bajan). Con 12 notas el patrón se repite: esa distancia es una <b>octava</b>.</p><p class="f">C C# D D# E F F# G G# A A# B</p><p><b>Regla “BE”:</b> todas las notas tienen sostenido menos B (Si) y E (Mi), porque no hay tecla negra entre Si–Do ni Mi–Fa. C#/Db son <b>enarmónicos</b>: igual sonido, distinto nombre; se usan sostenidos al subir y bemoles al bajar.</p><p>La <b>escala cromática</b> de 12 notas es el “diccionario” del que salen escalas y acordes. Un traste = un semitono; dos trastes = un tono.</p>`],
+1:['Números e intervalos',()=>`<p>En vez de 12 tonalidades, numera las notas de la escala mayor 1–8 y piensa en <b>una sola tonalidad universal</b>. Un acorde mayor es 1-3-5 en cualquier tono; un power chord es 1-5-8; la progresión más común es 1-4-5. Sube o baja el número para las notas intermedias; 9, 11 y 13 son 2, 4 y 6 una octava arriba.</p>${tbl(['Semitonos','Intervalo','Número'],[[0,'Unísono','1'],[1,'2ª menor','b2'],[2,'2ª mayor','2'],[3,'3ª menor','b3'],[4,'3ª mayor','3'],[5,'4ª justa','4'],[6,'Tritono','b5 / #4'],[7,'5ª justa','5'],[8,'6ª menor','b6'],[9,'6ª mayor','6'],[10,'7ª menor','b7'],[11,'7ª mayor','7'],[12,'Octava','8']])}<h3>Inversión</h3><p>Al invertir un intervalo, los dos números suman 9 (3ª↔6ª). Mayor↔menor y aumentado↔disminuido se intercambian; los justos siguen justos (4ª↔5ª).</p><h3>Armónicos</h3><p>Los armónicos en los trastes 12, 7 y 5 dan la octava, la 5ª y la 4ª: las notas 1-5-8 que sostienen todo el lenguaje.</p>`],
+2:['Afinación y diapasón',()=>`<p>Cuerdas de grave a aguda: <b>E A D G B E</b> (6ª→1ª). Las vecinas están a 5 trastes salvo G–B, a 4, porque 4 dedos = 4 trastes. Para tocar las 12 notas: Mi grave con los dedos 1-4 y sigue en la cuerda siguiente.</p><p>Pasados 5 trastes usa <b>cambios de índice</b> al subir y de <b>meñique</b> al bajar. Cualquier escala cabe en una “caja” de 6 trastes, así que puedes tocarla en cualquier tono y lugar del mástil.</p><p>Aprende primero las notas de la 6ª cuerda (cada traste es la siguiente nota cromática) y cruza con la 5ª, 3ª y 2ª usando formas de octava.</p>${trainer()}`],
+3:['6 áreas y 4 formas de conocer un patrón',()=>`<p>La música es un idioma con seis partes: <b>Altura</b> (notas, escalas, acordes), <b>Ritmo</b>, <b>Timbre</b>, <b>Dinámica</b>, <b>Técnica</b> y <b>Notación</b>. La guitarra es una máquina de escribir: se toca con la mente, no con los dedos.</p><p>Conoce cada patrón de cuatro formas: <b>Pensar</b> (teoría), <b>Leer</b> (notación), <b>Oír</b> (oído) y <b>Hablar</b> (digitaciones).</p><p>Un músico real hace dos cosas: llegar al final de la canción y preguntarse “¿cómo lo hice?” en las seis áreas, idealmente grabándose.</p>`],
+4:['Escala mayor y tonalidades',()=>`<p>Fórmula: <code>T T S T T T S</code> (T = tono, S = semitono; los semitonos van entre 3–4 y 7–8). Para construir cualquier tonalidad escribe las letras desde la raíz y sube o baja notas hasta que cuadre el patrón. Sol tiene F#; Re tiene F# y C#.</p>${rootBtns('go')}<p class="f">${nm(root)}: ${SC['Major (Ionian)'].map(x=>nm(root+x)).join(' ')}</p><div class="row"><div>${circ()}</div><div>${tbl(['Tono','Alteraciones'],[['C','ninguna'],['G','F#'],['D','F# C#'],['A','F# C# G#'],['E','F# C# G# D#'],['F','Bb'],['Bb','Bb Eb'],['Eb','Bb Eb Ab'],['Ab','Bb Eb Ab Db']])}</div></div><p>Haz clic en una tonalidad del círculo para ver sus notas. En sentido horario se suman sostenidos (de 5ª en 5ª); en el contrario, bemoles. El anillo interior es el relativo menor, que comparte armadura (La menor = Do mayor).</p>`],
+5:['Modos',()=>`<p>Las mismas 7 notas dan 7 escalas según cuál sea la nota “casa”. El modo lo define el acorde que enfatizas, no la posición en el mástil.</p>${tbl(['Modo','Grado','Fórmula','Sonido'],[['Jónico','I','1 2 3 4 5 6 7','Mayor'],['Dórico','ii','1 2 b3 4 5 6 b7','Menor con 6ª mayor'],['Frigio','iii','1 b2 b3 4 5 b6 b7','Menor oscuro (b2)'],['Lidio','IV','1 2 3 #4 5 6 7','Mayor, soñador (#4)'],['Mixolidio','V','1 2 3 4 5 6 b7','Mayor, bluesero (b7)'],['Eólico','vi','1 2 b3 4 5 b6 b7','Menor natural'],['Locrio','vii°','1 b2 b3 4 b5 b6 b7','Disminuido']])}<p>Desde la misma raíz: Jónico→Lidio sube la 4ª, Jónico→Mixolidio baja la 7ª, Eólico→Dórico sube la 6ª, Eólico→Frigio baja la 2ª.</p>${modeX()}`],
+16:['Rutinas de práctica',()=>`<ul><li>Practica los acordes en <b>parejas</b>, cambiando cada 4 tiempos, sin parar 5 minutos, con metrónomo o caja de ritmos.</li><li>Empieza lento y sube el tempo. Piensa en el siguiente acorde y escucha si hay zumbidos.</li><li>Acorta el tiempo de cambio con rasgueos: 1 por compás, 2, 4 y luego corcheas.</li><li>Practica escalas cromáticas a diario, tocando los 4 trastes con 4 dedos.</li><li>Improvisación: practica a diario, usa bases en un tono que domines, empieza con un solo acorde, cuenta una historia, usa dinámicas y grábate.</li></ul>${practiceUI()}`],
+17:['Notación y ritmo',()=>`<p>La música escrita es una gráfica: altura en vertical, tiempo de izquierda a derecha. La guitarra se escribe una octava arriba de como suena. La tablatura tiene 6 líneas (cuerdas) con números de traste.</p>${tbl(['Figura','Tiempos (4/4)'],[['Redonda','4'],['Blanca','2'],['Negra','1'],['Corchea','½'],['Semicorchea','¼']])}<p>Compás: el número de arriba = tiempos por compás; el de abajo = figura que vale un tiempo (4 = negra). El puntillo suma la mitad; la ligadura une notas. Tab: h ligado ascendente, p ligado descendente, / deslizamiento, b bending, r soltar, x apagada, PM palm mute.</p><p>Diagramas: X = no tocar, O = al aire, números = dedos (1 índice … 4 meñique).</p>`]};
+/* ---------- ROUTER ---------- */
+const PAGES=[['Explore','fret',()=>viewFret(),t('Fretboard')],['Explore','chords',()=>viewChords(),t('Chords')]];
+function nav(){const f=document.getElementById('q').value.toLowerCase();let h='',g='';
+ const items=[...PAGES.map(p=>[p[0],p[1],p[3]]),...W.map((w,i)=>[w[0],'w'+i,L=='es'&&ES[i]?ES[i][0]:w[1]])].filter(x=>!f||x[2].toLowerCase().includes(f)||(x[1][0]=='w'&&((j)=>(L=='es'&&ES[j]?ES[j][1]:W[j][2])())(+x[1].slice(1)).replace(/<[^>]+>/g,' ').toLowerCase().includes(f)));
+ items.forEach(x=>{if(x[0]!=g){g=x[0];h+=`<h4>${t(g)}</h4>`}h+=`<a href="#${x[1]}" class="${location.hash=='#'+x[1]?'on':''}">${t(x[2])}</a>`});
+ document.getElementById('nav').innerHTML=h||'<small>'+t('No results')+'</small>';document.getElementById('lang').textContent=L=='en'?'ES':'EN';document.getElementById('sub').textContent=t('sub');document.getElementById('q').placeholder=t('Search')}
+function go(){if(mT){clearInterval(mT);mT=null}const h=(location.hash||'#fret').slice(1),m=document.getElementById('m');
+ m.innerHTML=h[0]=='w'&&W[+h.slice(1)]?viewWiki(+h.slice(1)):h=='chords'?viewChords():viewFret();initW();nav()}
+document.getElementById('q').oninput=nav;window.onhashchange=()=>{go();scrollTo(0,0)};go();
+</script></body></html>
