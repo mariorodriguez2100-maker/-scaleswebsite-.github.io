@@ -1,58 +1,60 @@
 <!DOCTYPE html>
 <html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>ScalesMaster · Guitar Wiki</title>
-<link rel="preconnect" href="https://fonts.googleapis.com"><link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@500;700&family=Newsreader:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
-:root{--bg:#0d1310;--p:#16201a;--l:#2a3830;--t:#ece6d6;--m:#98a69b;--a:#e8c547;--r:#e5484d;--o:#f08a24;--y:#e8c547;--g:#46b86c;--b:#4a90e2;--i:#7a6ff0;--v:#b565d9}
-*{box-sizing:border-box}html{scroll-behavior:smooth}
-body{margin:0;color:var(--t);font:16.5px/1.55 Newsreader,Georgia,serif;display:grid;grid-template-columns:240px 1fr;min-height:100vh;background:radial-gradient(900px 500px at 85% -10%,#24361f 0,transparent 60%),radial-gradient(700px 500px at 0 100%,#1b2740 0,transparent 55%),var(--bg);background-attachment:fixed}
-h1,h2,h3,button,select,input,th,nav a,.ui{font-family:'Bricolage Grotesque',system-ui,sans-serif}
-aside{background:#111a15ee;backdrop-filter:blur(8px);border-right:1px solid var(--l);padding:16px 12px;position:sticky;top:0;height:100vh;overflow:auto}
-aside h1{font-size:22px;margin:0;background:linear-gradient(90deg,var(--a),var(--o),var(--r),var(--v),var(--b),var(--g),var(--a));background-size:300% 100%;-webkit-background-clip:text;background-clip:text;color:transparent;animation:flow 9s linear infinite}
-@keyframes flow{to{background-position:300% 0}}
-aside small{color:var(--m)}#q{width:100%;margin:12px 0 6px;padding:8px 11px;background:var(--bg);border:1px solid var(--l);border-radius:8px;color:var(--t);transition:border-color .2s,box-shadow .2s}
-#q:focus{border-color:var(--a);box-shadow:0 0 0 3px #e8c54733;outline:0}
-nav h4{margin:12px 0 3px;font:700 12px 'Bricolage Grotesque';color:var(--a);letter-spacing:.04em}
-nav a{display:block;padding:4px 9px;margin:1px 0;border-radius:6px;color:var(--t);text-decoration:none;font-size:14px;border-left:3px solid transparent;transition:transform .15s,background .15s,border-color .15s}
-nav a:hover{background:var(--l);transform:translateX(4px)}nav a.on{background:#e8c5471f;border-left-color:var(--a);color:var(--a);font-weight:700}
-main{padding:22px clamp(14px,2.4vw,36px) 40px;max-width:1320px;min-width:0}
-h2{font-size:32px;line-height:1.1;margin:0 0 4px;position:relative;padding-bottom:10px}
-h2::after{content:"";position:absolute;left:0;bottom:0;height:3px;width:90px;border-radius:3px;background:linear-gradient(90deg,var(--r),var(--o),var(--y),var(--g),var(--b),var(--v));animation:grow .7s cubic-bezier(.2,.8,.2,1)}
-@keyframes grow{from{width:0}}
-h3{font-size:17px;margin:14px 0 4px;color:var(--a);break-after:avoid}
-p{margin:0 0 .7em}b{color:#fff7dc}a{color:var(--a)}
-ul,ol{margin:0 0 .8em;padding-left:1.2em}li{margin:.2em 0}li::marker{color:var(--a)}
-.card{background:linear-gradient(160deg,#1a261f,#131c17);border:1px solid var(--l);border-radius:12px;padding:12px 14px;margin:10px 0;overflow-x:auto;box-shadow:0 6px 24px #0006;transition:transform .2s,border-color .2s}
-.card:hover{border-color:#456052}
-button,select{background:var(--l);color:var(--t);border:1px solid #3a4a40;border-radius:8px;padding:6px 11px;font-size:14px;cursor:pointer;transition:transform .15s,background .15s,box-shadow .15s}
-button:hover,select:hover{transform:translateY(-2px);background:#364a3e;box-shadow:0 4px 12px #0006}button:active{transform:scale(.94)}
-button.on{background:var(--a);color:#1a1608;border-color:var(--a);box-shadow:0 0 14px #e8c54766}
-:focus-visible{outline:2px solid var(--a);outline-offset:2px}
-.row{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin:6px 0}
-.chip{padding:3px 11px;border-radius:99px;font:700 14px 'Bricolage Grotesque';color:#10150f;transition:transform .15s}.chip:hover{transform:scale(1.12) rotate(-2deg)}
-table{border-collapse:collapse;font-size:14.5px;width:100%;margin:6px 0 10px;break-inside:avoid}th,td{padding:4px 9px;border-bottom:1px solid var(--l);text-align:left}
-th{color:var(--a);font-size:12.5px;background:#e8c5470f}tr:nth-child(even) td{background:#ffffff06}tr:hover td{background:#e8c54712}
-code,.f{font-family:ui-monospace,monospace;color:var(--a);font-size:.9em;background:#e8c5471a;padding:1px 6px;border-radius:5px}
-.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:10px}.grid .card{margin:0;padding:8px;text-align:center}.grid .card:hover{transform:translateY(-5px) rotate(-.6deg)}
-.bars{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}.bars div{background:#0d1310;border:1px solid var(--l);border-radius:8px;padding:9px;text-align:center;font:700 17px 'Bricolage Grotesque';transition:transform .15s,border-color .15s}.bars div:hover{transform:scale(1.06);border-color:var(--a)}
+:root{--bg:#0b1013;--sb:#0d1317;--p:#11191d;--l:#263239;--ls:#1b252a;--t:#e8e5de;--m:#8b969c;--a:#efb462;--r:#e67f6f;--o:#df9765;--y:#c9bc71;--g:#78b28b;--b:#719fbd;--i:#818fb9;--v:#b48bc6}
+*{box-sizing:border-box;scrollbar-width:none}*::-webkit-scrollbar{display:none}html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--t);font:15.5px/1.6 Manrope,system-ui,sans-serif;min-height:100vh}
+.eb,.kick,nav h4,th,kbd,.sum span,code,.f{font-family:'DM Mono',ui-monospace,monospace}
+aside{position:fixed;inset:0 auto 0 0;width:290px;z-index:20;padding:26px 18px 20px;display:flex;flex-direction:column;background:var(--sb);border-right:1px solid var(--ls);overflow:auto}
+.brand{display:flex;gap:11px;align-items:center;padding:0 7px 22px}
+.mark{width:37px;height:37px;display:grid;place-items:center;color:#11160e;background:var(--a);border-radius:10px;transform:rotate(-3deg);box-shadow:0 0 28px #efb46224;font-size:20px;transition:transform .3s}.mark:hover{transform:rotate(8deg) scale(1.1)}
+.bn{font-size:19px;font-weight:800;letter-spacing:-.5px;color:#f6f8f3;line-height:1.1}.bn span{color:var(--a)}
+.bs{font-size:10.5px;font-weight:600;letter-spacing:.08em;color:#8a948b;text-transform:uppercase;margin-top:4px}
+.sb{display:flex;align-items:center;gap:8px;height:44px;padding:0 12px;border:1px solid #202626;border-radius:8px;background:#111517;transition:.2s}.sb:focus-within{border-color:#6b5638;box-shadow:0 0 0 3px #efb46212}
+#q{flex:1;min-width:0;border:0;background:transparent;color:var(--t);font-size:14.5px;outline:0}kbd{padding:2px 6px;color:#596059;border:1px solid #282e28;border-radius:4px;font-size:9px}
+nav{padding-top:14px}nav h4{margin:20px 0 7px;padding:0 12px;font:500 11px 'DM Mono';letter-spacing:.15em;color:#515851;text-transform:uppercase}
+nav a{position:relative;display:flex;align-items:center;min-height:42px;padding:0 13px;margin:2px 0;border-radius:8px;color:#a3ada4;text-decoration:none;font-size:15px;font-weight:600;transition:color .15s,background .15s,transform .15s}
+nav a:hover{color:#e6eae4;background:#131c18;transform:translateX(3px)}nav a.on{color:#fff3e0;background:#211b15}
+nav a.on::before{content:"";position:absolute;left:-18px;width:3px;height:24px;background:var(--a);border-radius:0 2px 2px 0}nav a.on::after{content:"";width:5px;height:5px;margin-left:auto;background:var(--a);border-radius:50%;box-shadow:0 0 8px var(--a)}
+.ref{margin-top:20px;padding:13px;border:1px solid #26343a;border-radius:10px;background:linear-gradient(145deg,#151f23,#10171a);font-size:12.5px;color:#aeb8bc}
+.tn{display:flex;justify-content:space-between;margin:12px 0 8px}.tn span{width:28px;height:28px;display:grid;place-items:center;color:#d7e3e2;border:1px solid #34515a;border-radius:6px;background:#142226;font:500 11px 'DM Mono'}.ref small{color:#68767b}
+.wrap{margin-left:290px;min-height:100vh;background:radial-gradient(circle at 67% 7%,#192329 0,transparent 28%)}
+.top{position:sticky;top:0;z-index:10;height:56px;display:flex;align-items:center;justify-content:space-between;padding:0 34px;border-bottom:1px solid #191e1a;background:#0a0d0bd9;backdrop-filter:blur(15px)}
+.crumb{font-size:11.5px;color:#575f58}.crumb b{color:#99a299;font-weight:600}.lang{border:0!important;background:transparent!important;color:#8b938b;font-size:11px}
+main{width:min(1180px,calc(100% - 56px));margin:0 auto;padding:36px 0 60px;min-width:0}
+h1{margin:0 0 12px;font-size:clamp(32px,4vw,52px);line-height:1.02;letter-spacing:-.05em;color:#f3f5f0}h1 em{color:var(--a);font-style:normal;font-weight:500}
+h2{font-size:24px;letter-spacing:-.035em;margin:4px 0 10px;color:#eef2ea}h3{font-size:16px;margin:14px 0 4px;color:var(--a);break-after:avoid}
+p{margin:0 0 .75em;color:#c9cdc6}b{color:#f4f1e8}a{color:var(--a)}ul,ol{margin:0 0 .8em;padding-left:1.2em}li{margin:.2em 0}li::marker{color:var(--a)}
+.hero{display:flex;justify-content:space-between;align-items:flex-end;gap:28px;margin-bottom:26px;flex-wrap:wrap}.hero p{max-width:560px;color:#7f887f;font-size:14px}
+.eb,.kick{font-size:9px;letter-spacing:.14em;color:#798178;margin-bottom:10px;text-transform:uppercase}.kick{color:#95866f}
+.sum{min-width:300px;display:grid;grid-template-columns:1.5fr 1fr;border:1px solid var(--l);border-radius:9px;background:#10171a;overflow:hidden}.sum>div{display:flex;flex-direction:column;gap:6px;padding:13px 15px}.sum>div+div{border-left:1px solid var(--l)}.sum span{font-size:8px;letter-spacing:.1em;color:#5d6a70}.sum b{font:500 10px 'DM Mono';color:#cbd2d0;white-space:nowrap}
+.card{background:#101519;border:1px solid var(--l);border-radius:14px;padding:14px 16px;margin:10px 0;overflow-x:auto;box-shadow:0 30px 80px #00000033;transition:border-color .2s}.card:hover{border-color:#3b4b53}
+button,select{background:#141b18;color:#a9b2a9;border:1px solid #2a332d;border-radius:6px;padding:6px 11px;font:600 12.5px Manrope,sans-serif;cursor:pointer;transition:transform .15s,background .15s,color .15s}
+button:hover,select:hover{transform:translateY(-2px);background:#1b2420;color:#e1e6df}button:active{transform:scale(.94)}
+button.on{background:var(--a);color:#21170c;border-color:var(--a)}:focus-visible{outline:2px solid var(--a);outline-offset:2px}
+.row{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin:6px 0}.chip{padding:3px 11px;border-radius:99px;font:700 13px Manrope;color:#10150f;transition:transform .15s}.chip:hover{transform:scale(1.12) rotate(-2deg)}
+table{border-collapse:collapse;font-size:14px;width:100%;margin:6px 0 10px;break-inside:avoid}th,td{padding:5px 9px;border-bottom:1px solid var(--ls);text-align:left}th{color:var(--a);font-size:10px;letter-spacing:.08em;text-transform:uppercase;background:#efb4620d}tr:hover td{background:#efb46210}
+code,.f{color:var(--a);font-size:.88em;background:#efb4621a;padding:1px 6px;border-radius:5px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:10px}.grid .card{margin:0;padding:8px;text-align:center}.grid .card:hover{transform:translateY(-5px)}
+.bars{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}.bars div{background:#0b1013;border:1px solid var(--l);border-radius:8px;padding:9px;text-align:center;font:800 16px Manrope;transition:.15s}.bars div:hover{transform:scale(1.06);border-color:var(--a)}
 .two{display:grid;grid-template-columns:minmax(0,1.3fr) minmax(0,1fr);gap:14px;align-items:start}.two .card{margin:0}
-.art{columns:2 400px;column-gap:34px;margin-top:10px}.art>*{break-inside:avoid-column}.art table,.art .row,.art .bars{break-inside:avoid}
-.art>p:first-child{column-span:all;max-width:none;font-size:1.18em;line-height:1.5;color:#fff7dc;border-left:3px solid var(--a);padding:2px 0 2px 14px;margin-bottom:14px;background:linear-gradient(90deg,#e8c54712,transparent)}
-.art>.card{column-span:all}.bt{transition:transform .1s,background .1s}.bt.on{background:var(--a)!important;color:#10150f!important;transform:scale(1.3)}input[type=range]{accent-color:var(--a)}.dot{transform-box:fill-box;transform-origin:center;animation:pop .45s cubic-bezier(.3,1.6,.5,1) backwards}
-@keyframes pop{from{transform:scale(0);opacity:0}}
-.dot:hover{transform:scale(1.35);transition:transform .15s}
-@media(max-width:900px){.two{grid-template-columns:1fr}body{display:block}aside{position:static;height:auto;max-height:46vh}}
-@media(prefers-reduced-motion:no-preference){main>*{animation:up .45s cubic-bezier(.2,.8,.2,1) backwards}
-main>:nth-child(2){animation-delay:.05s}main>:nth-child(3){animation-delay:.1s}main>:nth-child(4){animation-delay:.15s}main>:nth-child(5){animation-delay:.2s}main>:nth-child(n+6){animation-delay:.25s}
+.art{columns:2 400px;column-gap:34px;margin-top:10px}.art>*{break-inside:avoid-column}.art>.card{column-span:all}
+.art>p:first-child{column-span:all;max-width:none;font-size:1.15em;line-height:1.55;color:#f4f1e8;border-left:3px solid var(--a);padding:2px 0 2px 14px;margin-bottom:14px;background:linear-gradient(90deg,#efb46212,transparent)}
+.nx{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:14px}.cc{display:flex;gap:14px;align-items:flex-start;padding:20px;border:1px solid var(--ls);border-radius:12px;background:var(--p);color:var(--t);text-decoration:none;transition:.2s}.cc:hover{border-color:#6b5638;transform:translateY(-3px)}.cc i{font:500 11px 'DM Mono';color:var(--a);font-style:normal}.cc small{display:block;font:500 9px 'DM Mono';letter-spacing:.12em;color:#798178}.cc span{display:block;color:#7f887f;font-size:13px}.cc b{font-size:16px}
+.go{grid-column:1/-1;margin:0}
+.bt{transition:transform .1s,background .1s}.bt.on{background:var(--a)!important;color:#10150f!important;transform:scale(1.3)}input[type=range]{accent-color:var(--a)}
+.dot{transform-box:fill-box;transform-origin:center;animation:pop .45s cubic-bezier(.3,1.6,.5,1) backwards}@keyframes pop{from{transform:scale(0);opacity:0}}.dot:hover{transform:scale(1.35);transition:transform .15s}
+@media(max-width:900px){aside{position:static;width:auto;height:auto;max-height:60vh}.wrap{margin-left:0}.two,.nx{grid-template-columns:1fr}.top{position:static}}
+@media(prefers-reduced-motion:no-preference){main>*{animation:up .45s cubic-bezier(.2,.8,.2,1) backwards}main>:nth-child(2){animation-delay:.05s}main>:nth-child(3){animation-delay:.1s}main>:nth-child(4){animation-delay:.15s}main>:nth-child(n+5){animation-delay:.2s}
 .grid .card{animation:up .5s cubic-bezier(.2,.8,.2,1) backwards}.grid .card:nth-child(2){animation-delay:.08s}.grid .card:nth-child(3){animation-delay:.16s}.grid .card:nth-child(4){animation-delay:.24s}.grid .card:nth-child(5){animation-delay:.32s}
-.chip{animation:pop .4s cubic-bezier(.3,1.6,.5,1) backwards}.chip:nth-child(2){animation-delay:.05s}.chip:nth-child(3){animation-delay:.1s}.chip:nth-child(4){animation-delay:.15s}.chip:nth-child(5){animation-delay:.2s}.chip:nth-child(n+6){animation-delay:.25s}
-@keyframes up{from{opacity:0;transform:translateY(14px)}}}
+.chip{animation:pop .4s cubic-bezier(.3,1.6,.5,1) backwards}.chip:nth-child(2){animation-delay:.05s}.chip:nth-child(3){animation-delay:.1s}.chip:nth-child(4){animation-delay:.15s}.chip:nth-child(n+5){animation-delay:.2s}@keyframes up{from{opacity:0;transform:translateY(14px)}}}
 @media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 </style></head><body>
-<aside><h1>ScalesMaster</h1><small id="sub">Guitar wiki for lessons</small>
-<input id="q" type="search" placeholder="Search the wiki…" aria-label="Search"><nav id="nav"></nav>
-<div class="row"><button id="lang" onclick="L=L=='en'?'es':'en';nav();go()">ES</button></div></aside>
-<main id="m"></main>
+<aside><div class="brand"><div class="mark">♪</div><div><div class="bn">Scales<span>Master</span></div><div id="sub" class="bs">Guitar learning studio</div></div></div>
+<label class="sb"><input id="q" type="search" placeholder="Search lessons" aria-label="Search"><kbd>/</kbd></label><nav id="nav"></nav><div class="ref" id="ref"></div></aside>
+<div class="wrap"><header class="top"><div id="crumb" class="crumb"></div><button id="lang" class="lang" onclick="L=L=='en'?'es':'en';nav();go()">ES</button></header><main id="m"></main></div>
 <script>
 const N=['C','C#','D','D#','E','F','F#','G','G#','A','A#','B'],FL=['C','Db','D','Eb','E','F','Gb','G','Ab','A','Bb','B'];
 const FLATKEYS=[5,10,3,8,1,6];let root=0,L='en',scaleK='Major (Ionian)',ov='all',lab='note',ctype='Major';
@@ -61,7 +63,7 @@ const COL=['--r','--o','--o','--y','--y','--g','--g','--b','--i','--i','--v','--
 const IV=['R','b2','2','b3','3','4','b5','5','b6','6','b7','7'];
 const SC={'Major (Ionian)':[0,2,4,5,7,9,11],'Dorian':[0,2,3,5,7,9,10],'Phrygian':[0,1,3,5,7,8,10],'Lydian':[0,2,4,6,7,9,11],'Mixolydian':[0,2,4,5,7,9,10],'Natural Minor (Aeolian)':[0,2,3,5,7,8,10],'Locrian':[0,1,3,5,6,8,10],'Harmonic Minor':[0,2,3,5,7,8,11],'Melodic Minor':[0,2,3,5,7,9,11],'Pentatonic Major':[0,2,4,7,9],'Pentatonic Minor':[0,3,5,7,10],'Blues':[0,3,5,6,7,10],'Whole Tone':[0,2,4,6,8,10],'Chromatic':[0,1,2,3,4,5,6,7,8,9,10,11]};
 const TU=[4,11,7,2,9,4];
-const T={es:{Search:'Buscar en la wiki…',Explore:'Explorar',Fretboard:'Diapasón y escalas',Chords:'Acordes CAGED',sub:'Wiki de guitarra para clases','Show degrees':'Ver grados','Show note names':'Ver notas',Play:'Reproducir','All scale notes':'Todas las notas','Roots only':'Solo raíces','Chord tones 1-3-5':'Notas del acorde 1-3-5',Basics:'Básicos',Scales:'Escalas',Harmony:'Armonía',Songs:'Canciones',Practice:'Práctica','No results':'Sin resultados','Note trainer':'Entrenador de notas',String:'Cuerda',Fret:'Traste',Score:'Puntos',Metronome:'Metrónomo','Chord pair':'Pareja de acordes'}};
+const T={en:{sub:'Guitar learning studio',Search:'Search lessons','hero p':'Explore how scales connect across the neck, understand every interval, and turn patterns into music.','idea p':'A scale is a sequence of distances that gives each scale its own colour and feeling.','shape p':'Learn the interval pattern once, then move it to any root to play confidently in every key.'},es:{'INTERACTIVE FRETBOARD':'DIAPASÓN INTERACTIVO','See the scale.':'Ve la escala.','Own the fretboard.':'Domina el diapasón.','hero p':'Descubre cómo se conectan las escalas en el mástil, entiende cada intervalo y convierte los patrones en música.','INTERVAL FORMULA':'FÓRMULA DE INTERVALOS','NOTES IN SCALE':'NOTAS EN LA ESCALA',notes:'notas','THE IDEA':'LA IDEA','A pattern of intervals':'Un patrón de intervalos','idea p':'Una escala es una secuencia de distancias que le da a cada escala su propio color y sentimiento.','ON THE NECK':'EN EL MÁSTIL','One shape, everywhere':'Una forma, en todas partes','shape p':'Aprende el patrón de intervalos una vez y muévelo a cualquier raíz para tocar en todas las tonalidades.','EXPLORE FURTHER':'SIGUE EXPLORANDO','What would you like to do next?':'¿Qué quieres hacer ahora?','Compare a mode':'Comparar un modo','Build a chord':'Armar un acorde','Hear the scale':'Escuchar la escala','Standard tuning':'Afinación estándar','Low string to high string':'De cuerda grave a aguda',Search:'Buscar lecciones',Explore:'Explorar',Fretboard:'Diapasón y escalas',Chords:'Acordes CAGED',sub:'Estudio de guitarra','Show degrees':'Ver grados','Show note names':'Ver notas',Play:'Reproducir','All scale notes':'Todas las notas','Roots only':'Solo raíces','Chord tones 1-3-5':'Notas del acorde 1-3-5',Basics:'Básicos',Scales:'Escalas',Harmony:'Armonía',Songs:'Canciones',Practice:'Práctica','No results':'Sin resultados','Note trainer':'Entrenador de notas',String:'Cuerda',Fret:'Traste',Score:'Puntos',Metronome:'Metrónomo','Chord pair':'Pareja de acordes'}};
 const t=k=>(T[L]&&T[L][k])||k;
 function tbl(h,r){return`<table><tr>${h.map(x=>`<th>${x}</th>`).join('')}</tr>${r.map(x=>`<tr>${x.map(c=>`<td>${c}</td>`).join('')}</tr>`).join('')}</table>`}
 const sEl=(a,b)=>document.querySelector(a)&&0;
@@ -80,13 +82,13 @@ function viewFret(){
    const x=f?40+(f-.5)*fw:22;svg+=`<g class="dot" style="animation-delay:${(f*6+st)*10}ms"><circle cx="${x}" cy="${y}" r="9.5" fill="${col(rel)}" ${rel==0?'stroke="#fff" stroke-width="2"':''}/><text x="${x}" y="${y+4}" font-size="10.5" font-weight="700" fill="#10150f" text-anchor="middle">${lab=='note'?nm(ni):IV[rel]}</text></g>`}}
  svg+='</svg>';
  const dc=s.length==7?s.map((x,i)=>{const q=quality(s,i);return`<tr><td>${['I','II','III','IV','V','VI','VII'][i]}</td><td><b>${nm(root+x)}${q[0]}</b></td><td>${nm(root+x)}${seventh(s,i)}</td></tr>`}).join(''):'';
- return`<h2>${t('Fretboard')}</h2>${rootBtns('go')}<div class="row"><select id="sc" onchange="scaleK=this.value;go()" aria-label="Scale">${Object.keys(SC).map(k=>`<option ${k==scaleK?'selected':''}>${k}</option>`).join('')}</select>
+ return`${heroHTML(s)}<div class="kick">${t('INTERACTIVE FRETBOARD')}</div><h2>${nm(root)} ${scaleK}</h2>${rootBtns('go')}<div class="row"><select id="sc" onchange="scaleK=this.value;go()" aria-label="Scale">${Object.keys(SC).map(k=>`<option ${k==scaleK?'selected':''}>${k}</option>`).join('')}</select>
  <select onchange="ov=this.value;go()" aria-label="Overlay">${[['all','All scale notes'],['roots','Roots only'],['tri','Chord tones 1-3-5']].map(o=>`<option value="${o[0]}" ${ov==o[0]?'selected':''}>${t(o[1])}</option>`).join('')}</select>
  <button onclick="lab=lab=='note'?'deg':'note';go()">${t(lab=='note'?'Show degrees':'Show note names')}</button><button onclick="play()">▶ ${t('Play')}</button></div>
  <div class="card">${svg}</div>
  <div class="two"><div><div class="row">${s.map(x=>`<span class="chip" style="background:${col(x)}">${nm(root+x)} <small>${IV[x]}</small></span>`).join('')}</div>
  ${stepBar(SC[scaleK])}<p>${L=='es'?'El color del punto sigue el grado, como en las tablas de colores de Scotty West: raíz roja, 2ª naranja, 3ª amarilla, 4ª verde, 5ª azul, 6ª índigo, 7ª violeta.':`Dot colour follows the degree, like Scotty West's colour-coded charts: root red, 2nd orange, 3rd yellow, 4th green, 5th blue, 6th indigo, 7th violet.`}</p></div>
- ${dc?`<div class="card">${tbl(['Degree','Triad','7th chord'],dc.split('</tr>').filter(Boolean).map(r=>[...r.matchAll(/<td>(.*?)<\/td>/g)].map(m=>m[1])))}</div>`:''}</div>`}
+ ${dc?`<div class="card">${tbl(['Degree','Triad','7th chord'],dc.split('</tr>').filter(Boolean).map(r=>[...r.matchAll(/<td>(.*?)<\/td>/g)].map(m=>m[1])))}</div>`:''}</div>${nextHTML()}`}
 function play(){const c=new (window.AudioContext||window.webkitAudioContext)();SC[scaleK].concat([12]).forEach((x,i)=>{const o=c.createOscillator(),g=c.createGain();o.type='triangle';o.frequency.value=220*2**((root+x-9)/12);g.gain.setValueAtTime(.25,c.currentTime+i*.3);g.gain.exponentialRampToValueAtTime(.001,c.currentTime+i*.3+.5);o.connect(g);g.connect(c.destination);o.start(c.currentTime+i*.3);o.stop(c.currentTime+i*.3+.55)})}
 /* ---------- CAGED CHORDS (offsets from root fret, low E → high E; null = muted) ---------- */
 const X=null,FORMS={E:{s:0,Major:[0,2,2,1,0,0],Minor:[0,2,2,0,0,0],'Dominant 7':[0,2,0,1,0,0],'Minor 7':[0,2,0,0,0,0],'Major 7':[0,2,1,1,0,0]},
@@ -157,12 +159,16 @@ const ES={
 5:['Modos',()=>`<p>Las mismas 7 notas dan 7 escalas según cuál sea la nota “casa”. El modo lo define el acorde que enfatizas, no la posición en el mástil.</p>${tbl(['Modo','Grado','Fórmula','Sonido'],[['Jónico','I','1 2 3 4 5 6 7','Mayor'],['Dórico','ii','1 2 b3 4 5 6 b7','Menor con 6ª mayor'],['Frigio','iii','1 b2 b3 4 5 b6 b7','Menor oscuro (b2)'],['Lidio','IV','1 2 3 #4 5 6 7','Mayor, soñador (#4)'],['Mixolidio','V','1 2 3 4 5 6 b7','Mayor, bluesero (b7)'],['Eólico','vi','1 2 b3 4 5 b6 b7','Menor natural'],['Locrio','vii°','1 b2 b3 4 b5 b6 b7','Disminuido']])}<p>Desde la misma raíz: Jónico→Lidio sube la 4ª, Jónico→Mixolidio baja la 7ª, Eólico→Dórico sube la 6ª, Eólico→Frigio baja la 2ª.</p>${modeX()}`],
 16:['Rutinas de práctica',()=>`<ul><li>Practica los acordes en <b>parejas</b>, cambiando cada 4 tiempos, sin parar 5 minutos, con metrónomo o caja de ritmos.</li><li>Empieza lento y sube el tempo. Piensa en el siguiente acorde y escucha si hay zumbidos.</li><li>Acorta el tiempo de cambio con rasgueos: 1 por compás, 2, 4 y luego corcheas.</li><li>Practica escalas cromáticas a diario, tocando los 4 trastes con 4 dedos.</li><li>Improvisación: practica a diario, usa bases en un tono que domines, empieza con un solo acorde, cuenta una historia, usa dinámicas y grábate.</li></ul>${practiceUI()}`],
 17:['Notación y ritmo',()=>`<p>La música escrita es una gráfica: altura en vertical, tiempo de izquierda a derecha. La guitarra se escribe una octava arriba de como suena. La tablatura tiene 6 líneas (cuerdas) con números de traste.</p>${tbl(['Figura','Tiempos (4/4)'],[['Redonda','4'],['Blanca','2'],['Negra','1'],['Corchea','½'],['Semicorchea','¼']])}<p>Compás: el número de arriba = tiempos por compás; el de abajo = figura que vale un tiempo (4 = negra). El puntillo suma la mitad; la ligadura une notas. Tab: h ligado ascendente, p ligado descendente, / deslizamiento, b bending, r soltar, x apagada, PM palm mute.</p><p>Diagramas: X = no tocar, O = al aire, números = dedos (1 índice … 4 meñique).</p>`]};
+function heroHTML(s){const fm=s.map((x,i)=>{const d=(s[i+1]??12)-x;return d==1?(L=='es'?'S':'H'):d==2?(L=='es'?'T':'W'):d==3?(L=='es'?'T+S':'W+H'):d}).join(' · ');
+return`<section class="hero"><div><div class="eb">${t('INTERACTIVE FRETBOARD')}</div><h1>${t('See the scale.')}<br><em>${t('Own the fretboard.')}</em></h1><p>${t('hero p')}</p></div><div class="sum"><div><span>${t('INTERVAL FORMULA')}</span><b>${fm}</b></div><div><span>${t('NOTES IN SCALE')}</span><b>${s.length} ${t('notes')}</b></div></div></section>`}
+function nextHTML(){return`<div class="nx"><a class="cc" href="#w1"><i>01</i><div><small>${t('THE IDEA')}</small><b>${t('A pattern of intervals')}</b><span>${t('idea p')}</span></div></a><a class="cc" href="#w2"><i>02</i><div><small>${t('ON THE NECK')}</small><b>${t('One shape, everywhere')}</b><span>${t('shape p')}</span></div></a><div class="card go"><div class="kick">${t('EXPLORE FURTHER')}</div><b>${t('What would you like to do next?')}</b><div class="row"><button onclick="scaleK='Dorian';go()">${t('Compare a mode')}</button><button onclick="ov='tri';go()">${t('Build a chord')}</button><button onclick="play()">▶ ${t('Hear the scale')}</button></div></div></div>`}
+addEventListener('keydown',e=>{if(e.key=='/'&&document.activeElement.id!='q'){e.preventDefault();document.getElementById('q').focus()}});
 /* ---------- ROUTER ---------- */
 const PAGES=[['Explore','fret',()=>viewFret(),t('Fretboard')],['Explore','chords',()=>viewChords(),t('Chords')]];
 function nav(){const f=document.getElementById('q').value.toLowerCase();let h='',g='';
  const items=[...PAGES.map(p=>[p[0],p[1],p[3]]),...W.map((w,i)=>[w[0],'w'+i,L=='es'&&ES[i]?ES[i][0]:w[1]])].filter(x=>!f||x[2].toLowerCase().includes(f)||(x[1][0]=='w'&&((j)=>(L=='es'&&ES[j]?ES[j][1]:W[j][2])())(+x[1].slice(1)).replace(/<[^>]+>/g,' ').toLowerCase().includes(f)));
  items.forEach(x=>{if(x[0]!=g){g=x[0];h+=`<h4>${t(g)}</h4>`}h+=`<a href="#${x[1]}" class="${location.hash=='#'+x[1]?'on':''}">${t(x[2])}</a>`});
- document.getElementById('nav').innerHTML=h||'<small>'+t('No results')+'</small>';document.getElementById('lang').textContent=L=='en'?'ES':'EN';document.getElementById('sub').textContent=t('sub');document.getElementById('q').placeholder=t('Search')}
+ {const h=(location.hash||'#fret').slice(1),j=h[0]=='w'?+h.slice(1):-1,c=j>=0&&W[j]?[W[j][0],L=='es'&&ES[j]?ES[j][0]:W[j][1]]:['Explore',h=='chords'?'Chords':'Fretboard'];document.getElementById('crumb').innerHTML=`${t(c[0])} › <b>${t(c[1])}</b>`;document.getElementById('ref').innerHTML=`<b style="font-size:13px;color:#cdd5d0">${t('Standard tuning')}</b><div class="tn">${['E','A','D','G','B','E'].map(n=>`<span>${n}</span>`).join('')}</div><small>${t('Low string to high string')}</small>`}document.getElementById('nav').innerHTML=h||'<small>'+t('No results')+'</small>';document.getElementById('lang').textContent=L=='en'?'ES':'EN';document.getElementById('sub').textContent=t('sub');document.getElementById('q').placeholder=t('Search')}
 function go(){if(mT){clearInterval(mT);mT=null}const h=(location.hash||'#fret').slice(1),m=document.getElementById('m');
  m.innerHTML=h[0]=='w'&&W[+h.slice(1)]?viewWiki(+h.slice(1)):h=='chords'?viewChords():viewFret();initW();nav()}
 document.getElementById('q').oninput=nav;window.onhashchange=()=>{go();scrollTo(0,0)};go();
