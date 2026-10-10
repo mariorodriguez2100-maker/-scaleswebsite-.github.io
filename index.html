@@ -13,7 +13,7 @@
         .animate-glow { animation: pulse-glow 2s infinite; }
     </style>
 </head>
-<body class="bg-slate-950 text-slate-100 min-h-screen p-4 md:p-6 font-sans">
+<body class="bg-slate-950 text-slate-100 min-h-screen p-4 md:p-6 font-sans transition-colors duration-300">
     <div class="max-w-7xl mx-auto space-y-6">
         
         <!-- Header & Language Toggle -->
@@ -22,7 +22,7 @@
                 <h1 id="txt-title" class="text-2xl font-black tracking-wider text-cyan-400">GUITAR SCALE & CHORD MASTERY STUDIO</h1>
                 <p id="txt-subtitle" class="text-sm text-slate-400">Created by Mario | Interactive Slide Rule, Scales & Chord Forms</p>
             </div>
-            <div class="flex items-center gap-3">
+            <div>
                 <button onclick="toggleLang()" class="px-4 py-2 bg-slate-800 hover:bg-slate-700 text-cyan-300 rounded-lg text-sm font-bold border border-slate-700 transition-all shadow-lg">
                     🌐 <span id="lang-btn-text">Español</span>
                 </button>
@@ -38,7 +38,7 @@
                 🎸 Chord Shapes (5 Forms)
             </button>
             <button onclick="switchTab('theory')" id="tab-theory" class="px-5 py-2.5 rounded-xl font-bold text-sm bg-slate-900 text-slate-300 hover:bg-slate-800 border border-slate-800 transition-all">
-                📖 Theory & Number System
+                📖 Music Theory & Number System
             </button>
         </nav>
 
@@ -56,9 +56,9 @@
                 <div>
                     <label id="lbl-view" class="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">Fretboard Overlay</label>
                     <select id="overlay-select" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-4 py-3 text-slate-100 font-semibold focus:outline-none focus:border-cyan-500">
-                        <option value="all">All Scale Notes</option>
-                        <option value="root">Roots Only (Do)</option>
-                        <option value="pentatonic">Pentatonic Box</option>
+                        <option value="all" id="opt-all">All Scale Notes</option>
+                        <option value="root" id="opt-root">Roots Only (Do)</option>
+                        <option value="pentatonic" id="opt-penta">Pentatonic Box</option>
                     </select>
                 </div>
             </div>
@@ -66,15 +66,15 @@
             <!-- Theory Cards -->
             <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
                 <div class="bg-slate-900/90 p-6 rounded-2xl border border-slate-800 shadow-xl">
-                    <h2 class="text-xs font-bold text-cyan-400 uppercase tracking-widest mb-3">Scale Notes / Spelling</h2>
+                    <h2 id="hdr-notes" class="text-xs font-bold text-cyan-400 uppercase tracking-widest mb-3">Scale Notes</h2>
                     <div id="scale-notes" class="text-lg font-mono font-bold tracking-widest text-slate-100 flex flex-wrap gap-2"></div>
                 </div>
                 <div class="bg-slate-900/90 p-6 rounded-2xl border border-slate-800 shadow-xl">
-                    <h2 class="text-xs font-bold text-cyan-400 uppercase tracking-widest mb-3">Interval Formula</h2>
+                    <h2 id="hdr-intervals" class="text-xs font-bold text-cyan-400 uppercase tracking-widest mb-3">Intervals</h2>
                     <div id="scale-intervals" class="text-xs font-mono text-slate-300 flex flex-wrap gap-1.5"></div>
                 </div>
                 <div class="bg-slate-900/90 p-6 rounded-2xl border border-slate-800 shadow-xl">
-                    <h2 class="text-xs font-bold text-cyan-400 uppercase tracking-widest mb-3">Diatonic Chords (Nashville)</h2>
+                    <h2 id="hdr-chords" class="text-xs font-bold text-cyan-400 uppercase tracking-widest mb-3">Diatonic Chords</h2>
                     <div id="diatonic-chords" class="text-xs font-mono text-slate-300 grid grid-cols-2 gap-2"></div>
                 </div>
             </div>
@@ -82,8 +82,8 @@
             <!-- Interactive Fretboard Graph -->
             <div class="bg-slate-900/90 p-6 rounded-2xl border border-slate-800 overflow-x-auto shadow-2xl">
                 <div class="flex justify-between items-center mb-4">
-                    <h2 class="text-xs font-bold text-cyan-400 uppercase tracking-widest">Interactive Fretboard Graph (E-A-D-G-B-E)</h2>
-                    <button onclick="playScaleAudio()" class="px-4 py-2 bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-bold rounded-xl text-xs uppercase tracking-wider transition-all shadow-lg shadow-cyan-500/30">
+                    <h2 id="hdr-fretboard" class="text-xs font-bold text-cyan-400 uppercase tracking-widest">Interactive Fretboard (E-A-D-G-B-E)</h2>
+                    <button onclick="playScaleAudio()" id="btn-play" class="px-4 py-2 bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-bold rounded-xl text-xs uppercase tracking-wider transition-all shadow-lg shadow-cyan-500/30">
                         🔊 Play Scale Audio
                     </button>
                 </div>
@@ -94,11 +94,12 @@
         <!-- TAB 2: CHORD SHAPES & 5 FORMS -->
         <div id="view-chords" class="space-y-6 hidden">
             <div class="bg-slate-900/90 p-6 rounded-2xl border border-slate-800 shadow-2xl space-y-4">
-                <h2 class="text-lg font-bold text-cyan-400">The 5 Basic Movable Chord Forms (E, A, D, G, C Forms)</h2>
-                <p class="text-sm text-slate-300">Any chord can be played in 5 different positions across the neck using bar chords derived from open string shapes[cite: 10, 11]. Select a chord type and form below to inspect its spelling and structure.</p>
+                <h2 id="chord-hdr-title" class="text-lg font-bold text-cyan-400">The 5 Basic Movable Chord Forms (E, A, D, G, C Forms)</h2>
+                <p id="chord-hdr-desc" class="text-sm text-slate-300">Any chord can be played in 5 different positions across the neck using bar chords derived from open string shapes. Select a chord type and form below to inspect its visual fretboard graph.</p>
+                
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
-                        <label class="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">Chord Type</label>
+                        <label id="lbl-chord-type" class="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">Chord Type</label>
                         <select id="chord-type-select" onchange="updateChordDisplay()" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-4 py-3 text-slate-100 font-semibold focus:outline-none focus:border-cyan-500">
                             <option value="Major">Major Triad (1 - 3 - 5)</option>
                             <option value="Minor">Minor Triad (1 - b3 - 5)</option>
@@ -108,38 +109,47 @@
                         </select>
                     </div>
                     <div>
-                        <label class="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">Select Form</label>
+                        <label id="lbl-chord-form" class="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">Select Form</label>
                         <select id="chord-form-select" onchange="updateChordDisplay()" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-4 py-3 text-slate-100 font-semibold focus:outline-none focus:border-cyan-500">
                             <option value="E">E Form (Root on Low E String)</option>
                             <option value="A">A Form (Root on A String)</option>
                             <option value="D">D Form (Root on D String)</option>
-                            <option value="G">G Form</option>
-                            <option value="C">C Form</option>
+                            <option value="G">G Form (Root on E/D Strings)</option>
+                            <option value="C">C Form (Root on A/B Strings)</option>
                         </select>
                     </div>
                 </div>
-                <div id="chord-details-box" class="bg-slate-950 p-6 rounded-xl border border-slate-800 font-mono text-sm space-y-2"></div>
+
+                <!-- Graphical Chord Fretboard Box -->
+                <div class="bg-slate-950 p-6 rounded-xl border border-slate-800 space-y-4">
+                    <div id="chord-info-text" class="font-mono text-sm text-cyan-300 font-bold"></div>
+                    <div id="chord-graph-container" class="overflow-x-auto py-2"></div>
+                </div>
             </div>
         </div>
 
         <!-- TAB 3: THEORY & NUMBER SYSTEM -->
         <div id="view-theory" class="space-y-6 hidden">
-            <div class="bg-slate-900/90 p-6 rounded-2xl border border-slate-800 shadow-2xl space-y-4">
-                <h2 class="text-lg font-bold text-cyan-400">Music Theory & The Musical Number System</h2>
-                <p class="text-sm text-slate-300">Music is a language with an alphabet of 12 notes[cite: 6]. Pitch patterns are structured around intervals and scale degrees using numbers (1 to 8) rather than fixed letter keys[cite: 16].</p>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div class="bg-slate-950 p-5 rounded-xl border border-slate-800 space-y-2">
-                        <h3 class="font-bold text-cyan-300 text-sm">The 4 Ways to Know Every Pitch Pattern[cite: 7]</h3>
-                        <ul class="list-disc list-inside text-xs text-slate-300 space-y-1">
-                            <li><strong>Think:</strong> Music Theory & conceptual spelling[cite: 7].</li>
-                            <li><strong>Read:</strong> Notation & fretboard graph reading[cite: 7].</li>
-                            <li><strong>Hear:</strong> Ear training & interval recognition[cite: 7].</li>
-                            <li><strong>Speak:</strong> Finger patterns on your instrument[cite: 7].</li>
+            <div class="bg-slate-900/90 p-6 rounded-2xl border border-slate-800 shadow-2xl space-y-6">
+                <div>
+                    <h2 id="theory-title-1" class="text-xl font-bold text-cyan-400 mb-2">Music is a Language with 6 Parts of Speech</h2>
+                    <p id="theory-desc-1" class="text-sm text-slate-300 leading-relaxed">According to Scotty West's system, music is literally a language. Your guitar is a "dumb machine" or typewriter used to type pitch patterns. To be a real player, you must master the 6 main areas of music: <strong>Pitch, Rhythm, Timbre, Dynamics, Technique, and Notation</strong>.</p>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="bg-slate-950 p-5 rounded-xl border border-slate-800 space-y-3">
+                        <h3 id="theory-box-title-1" class="font-bold text-cyan-300 text-sm uppercase tracking-wide">The 4 Ways to Know Every Pitch Pattern</h3>
+                        <ul class="list-disc list-inside text-xs text-slate-300 space-y-2">
+                            <li><strong class="text-slate-100" id="t-think">Think (Music Theory):</strong> Memorize spelling, grammar, and vocabulary formulas.</li>
+                            <li><strong class="text-slate-100" id="t-read">Read (Notation):</strong> Interpret staff notation, tablature, and fretboard grids.</li>
+                            <li><strong class="text-slate-100" id="t-hear">Hear (Ear Training):</strong> Recognize and sing interval sounds and chord qualities.</li>
+                            <li><strong class="text-slate-100" id="t-speak">Speak (Technique):</strong> Finger patterns on the fretboard to make your guitar express ideas.</li>
                         </ul>
                     </div>
-                    <div class="bg-slate-950 p-5 rounded-xl border border-slate-800 space-y-2">
-                        <h3 class="font-bold text-cyan-300 text-sm">Major Scale Diatonic Intervals[cite: 16]</h3>
-                        <p class="text-xs text-slate-300">Whole - Whole - Half - Whole - Whole - Whole - Half (Mostly whole steps except between 3 & 4 and 7 & 8)[cite: 16].</p>
+
+                    <div class="bg-slate-950 p-5 rounded-xl border border-slate-800 space-y-3">
+                        <h3 id="theory-box-title-2" class="font-bold text-cyan-300 text-sm uppercase tracking-wide">The Musical Number System</h3>
+                        <p id="theory-box-desc-2" class="text-xs text-slate-300 leading-relaxed">Instead of memorizing thousands of variations across 12 distinct alphabetical keys, the number system treats music as if there is only <strong>one universal key</strong>. The Major Diatonic Scale intervals (Do-Re-Mi-Fa-Sol-La-Ti-Do) serve as the benchmark numbers (1 to 8) to measure all chords and scale patterns instantly.</p>
                     </div>
                 </div>
             </div>
@@ -154,8 +164,64 @@
 
     <script>
         const translations = {
-            en: { title: "GUITAR SCALE & CHORD MASTERY STUDIO", subtitle: "Created by Mario | Interactive Slide Rule, Scales & Chord Forms", langBtn: "Español", disclaimer: "Free website for everyone" },
-            es: { title: "ESTUDIO DE DOMINIO DE ESCALAS Y ACORDES", subtitle: "Creado por Mario | Regla de cálculo, escalas y formas de acordes", langBtn: "English", disclaimer: "Sitio web gratuito para todos" }
+            en: {
+                title: "GUITAR SCALE & CHORD MASTERY STUDIO",
+                subtitle: "Created by Mario | Interactive Slide Rule, Scales & Chord Forms",
+                langBtn: "Español",
+                tabScales: "📊 Scales & Fretboard Graph",
+                tabChords: "🎸 Chord Shapes (5 Forms)",
+                tabTheory: "📖 Music Theory & Number System",
+                lblRoot: "Root Note",
+                lblScale: "Scale / Mode",
+                lblView: "Fretboard Overlay",
+                optAll: "All Scale Notes",
+                optRoot: "Roots Only (Do)",
+                optPenta: "Pentatonic Box",
+                hdrNotes: "Scale Notes",
+                hdrIntervals: "Intervals",
+                hdrChords: "Diatonic Chords",
+                hdrFretboard: "Interactive Fretboard (E-A-D-G-B-E)",
+                btnPlay: "🔊 Play Scale Audio",
+                chordHdrTitle: "The 5 Basic Movable Chord Forms (E, A, D, G, C Forms)",
+                chordHdrDesc: "Any chord can be played in 5 different positions across the neck using bar chords derived from open string shapes. Select a chord type and form below to inspect its visual fretboard graph.",
+                lblChordType: "Chord Type",
+                lblChordForm: "Select Form",
+                theoryTitle1: "Music is a Language with 6 Parts of Speech",
+                theoryDesc1: "According to Scotty West's system, music is literally a language. Your guitar is a 'dumb machine' or typewriter used to type pitch patterns. To be a real player, you must master the 6 main areas of music: Pitch, Rhythm, Timbre, Dynamics, Technique, and Notation.",
+                theoryBoxTitle1: "The 4 Ways to Know Every Pitch Pattern",
+                theoryBoxTitle2: "The Musical Number System",
+                theoryBoxDesc2: "Instead of memorizing thousands of variations across 12 distinct alphabetical keys, the number system treats music as if there is only one universal key. The Major Diatonic Scale intervals serve as benchmark numbers (1 to 8) to measure all chords and scale patterns instantly.",
+                disclaimer: "Free website for everyone"
+            },
+            es: {
+                title: "ESTUDIO DE DOMINIO DE ESCALAS Y ACORDES",
+                subtitle: "Creado por Mario | Regla de cálculo, escalas y formas de acordes",
+                langBtn: "English",
+                tabScales: "📊 Escalas y Gráfica del Diapasón",
+                tabChords: "🎸 Formas de Acordes (5 Formas)",
+                tabTheory: "📖 Teoría Musical y Sistema Numérico",
+                lblRoot: "Nota Raíz",
+                lblScale: "Escala / Modo",
+                lblView: "Vista del Diapasón",
+                optAll: "Todas las notas",
+                optRoot: "Solo Raíces (Do)",
+                optPenta: "Caja Pentatónica",
+                hdrNotes: "Notas de la Escala",
+                hdrIntervals: "Intervalos",
+                hdrChords: "Acordes Diatónicos",
+                hdrFretboard: "Diapasón Interactivo (E-A-D-G-B-E)",
+                btnPlay: "🔊 Reproducir Escala",
+                chordHdrTitle: "Las 5 Formas Básicas de Acordes Móviles (Formas E, A, D, G, C)",
+                chordHdrDesc: "Cualquier acorde se puede tocar en 5 posiciones diferentes utilizando acordes de cejilla derivados de figuras al aire. Selecciona un tipo de acorde y forma abajo para ver su gráfica en el diapasón.",
+                lblChordType: "Tipo de Acorde",
+                lblChordForm: "Seleccionar Forma",
+                theoryTitle1: "La música es un idioma con 6 partes de la oración",
+                theoryDesc1: "Según el sistema de Scotty West, la música es literalmente un idioma. Tu guitarra es una 'máquina tonta' o máquina de escribir para teclear patrones de altura. Para ser un músico real, debes dominar las 6 áreas principales: Tono, Ritmo, Timbre, Dinámica, Técnica y Notación.",
+                theoryBoxTitle1: "Las 4 formas de conocer cada patrón de altura",
+                theoryBoxTitle2: "El Sistema Numérico Musical",
+                theoryBoxDesc2: "En lugar de memorizar miles de variaciones en 12 tonalidades, el sistema numérico trata la música como si hubiera una sola tonalidad universal. Los intervalos de la escala diatónica mayor sirven como números base (1 al 8) para medir todos los acordes y escalas al instante.",
+                disclaimer: "Sitio web gratuito para todos"
+            }
         };
 
         let currentLang = 'en';
@@ -192,6 +258,29 @@
             document.getElementById("txt-title").textContent = t.title;
             document.getElementById("txt-subtitle").textContent = t.subtitle;
             document.getElementById("lang-btn-text").textContent = t.langBtn;
+            document.getElementById("tab-scales").textContent = t.tabScales;
+            document.getElementById("tab-chords").textContent = t.tabChords;
+            document.getElementById("tab-theory").textContent = t.tabTheory;
+            document.getElementById("lbl-root").textContent = t.lblRoot;
+            document.getElementById("lbl-scale").textContent = t.lblScale;
+            document.getElementById("lbl-view").textContent = t.lblView;
+            document.getElementById("opt-all").textContent = t.optAll;
+            document.getElementById("opt-root").textContent = t.optRoot;
+            document.getElementById("opt-penta").textContent = t.optPenta;
+            document.getElementById("hdr-notes").textContent = t.hdrNotes;
+            document.getElementById("hdr-intervals").textContent = t.hdrIntervals;
+            document.getElementById("hdr-chords").textContent = t.hdrChords;
+            document.getElementById("hdr-fretboard").textContent = t.hdrFretboard;
+            document.getElementById("btn-play").textContent = t.btnPlay;
+            document.getElementById("chord-hdr-title").textContent = t.chordHdrTitle;
+            document.getElementById("chord-hdr-desc").textContent = t.chordHdrDesc;
+            document.getElementById("lbl-chord-type").textContent = t.lblChordType;
+            document.getElementById("lbl-chord-form").textContent = t.lblChordForm;
+            document.getElementById("theory-title-1").textContent = t.theoryTitle1;
+            document.getElementById("theory-desc-1").textContent = t.theoryDesc1;
+            document.getElementById("theory-box-title-1").textContent = t.theoryBoxTitle1;
+            document.getElementById("theory-box-title-2").textContent = t.theoryBoxTitle2;
+            document.getElementById("theory-box-desc-2").textContent = t.theoryBoxDesc2;
             document.getElementById("txt-disclaimer").textContent = t.disclaimer;
         }
 
@@ -286,12 +375,27 @@
         function updateChordDisplay() {
             const type = document.getElementById("chord-type-select").value;
             const form = document.getElementById("chord-form-select").value;
-            const box = document.getElementById("chord-details-box");
-            box.innerHTML = `
-                <div class="text-cyan-400 font-bold text-base mb-1">Active Shape: ${currentRoot} ${type} (${form} Form)</div>
-                <div>Formula Notes: ${type === 'Major' ? '1 - 3 - 5' : type === 'Minor' ? '1 - b3 - 5' : type === 'Dominant 7' ? '1 - 3 - 5 - b7' : '1 - 3 - 5 - 7'}</div>
-                <div class="text-slate-400 text-xs mt-2">Movable Bar Form: Root located on the ${form === 'E' || form === 'G' ? 'Low E (6th)' : form === 'A' ? 'A (5th)' : form === 'D' ? 'D (4th)' : 'B'} string[cite: 10, 11].</div>
+            
+            document.getElementById("chord-info-text").innerHTML = `
+                <div>Active Chord: <span class="text-cyan-400">${currentRoot} ${type}</span> (${form} Form Shape)</div>
+                <div class="text-xs text-slate-400 mt-1">Formula: ${type === 'Major' ? '1 - 3 - 5 (Root, Major 3rd, Perfect 5th)' : type === 'Minor' ? '1 - b3 - 5 (Root, Minor 3rd, Perfect 5th)' : type === 'Dominant 7' ? '1 - 3 - 5 - b7' : '1 - 3 - 5 - 7'}</div>
             `;
+
+            // Render graphical chord box
+            const container = document.getElementById("chord-graph-container");
+            container.innerHTML = "";
+            const wrapper = document.createElement("div");
+            wrapper.className = "min-w-[400px] bg-slate-900 p-4 rounded-xl border border-slate-800 space-y-2";
+            wrapper.innerHTML = `
+                <div class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">Movable ${form}-Form Fingering Grid (${currentRoot})</div>
+                <div class="grid grid-cols-6 gap-2 text-center font-mono text-xs">
+                    <div class="text-slate-500">E</div><div class="text-slate-500">A</div><div class="text-slate-500">D</div><div class="text-slate-500">G</div><div class="text-slate-500">B</div><div class="text-slate-500">e</div>
+                </div>
+                <div class="p-4 bg-slate-950 rounded-lg border border-slate-800 text-center font-mono text-sm text-cyan-300">
+                    Root Note: <span class="font-bold text-white">${currentRoot}</span> in position (${form} shape bar chord format).
+                </div>
+            `;
+            container.appendChild(wrapper);
         }
 
         function playScaleAudio() {
